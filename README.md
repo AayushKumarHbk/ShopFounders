@@ -1,0 +1,1 @@
+This is an Angular 4 application which uses Spring Boot and MongoDB at the back-end.
