@@ -1,4 +1,7 @@
-export class LoginRequest {
+/**
+ * POJO to creaet Insert new user into LDAP server
+ */
+export class RegisterRequest {
     username: string;
     password: string;
     role: string;
@@ -9,7 +12,7 @@ export class LoginRequest {
         this.username = username;
     }
 
-    getUserName(): string { 
+    getUserName(): string {
         return this.username;
     }
 
@@ -17,7 +20,7 @@ export class LoginRequest {
         this.password = username;
     }
 
-    getPassword(): string { 
+    getPassword(): string {
         return this.password;
     }
 
@@ -25,7 +28,7 @@ export class LoginRequest {
         this.role = role;
     }
 
-    getUserRole(): string { 
+    getUserRole(): string {
         return this.role;
     }
 }

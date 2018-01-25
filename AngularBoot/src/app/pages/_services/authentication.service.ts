@@ -4,17 +4,16 @@ import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { Router } from '@angular/router';
 
-import { LoginRequest, LoginStatus, LoginResponse } from '../_models/index';
-import { WebserviceErrorHandler} from '../errohandler/errorhandler.component';
+import { LoginRequest, LoginStatus, LoginResponse, RegisterRequest, RegisterResponse } from '../_models/index';
+import { WebserviceErrorHandler } from '../errohandler/errorhandler.component';
 
 @Injectable()
 export class AuthenticationService {
     public token: string;
-    private _url_Auth_Login;
+    private _url_Auth_Register = 'http://localhost:8080/auth/register';
+    private _url_Auth_Login = 'http://localhost:8080/auth/login';
     http: Http;
     private authConnectionAttempt: number;
-    private loginresponse: LoginResponse;
-    private logindata: LoginStatus;
     public errorhandler: WebserviceErrorHandler;
 
     constructor(private router: Router,
@@ -23,13 +22,11 @@ export class AuthenticationService {
         // set token if saved in local storage
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
-        this.loginresponse = new LoginResponse();
-        this.logindata = new LoginStatus();
         this.errorhandler = new WebserviceErrorHandler();
     }
 
     login(username: string, password: string): Observable<boolean> {
-        return this.http.post('http://localhost:8080/auth/login', JSON.stringify({ username: username, password: password }))
+        return this.http.post(this._url_Auth_Login, JSON.stringify({ username: username, password: password }))
             .map((response: Response) => {
                 // login successful if there's a jwt token in the response
 
@@ -59,7 +56,7 @@ export class AuthenticationService {
         this._url_Auth_Login = 'http://localhost:8080/auth/login';
 
         // check if request is null
-        if (request != null || request !== {}) {
+        if (request && request.getUserName() && request.getUserName() && request.getUserRole()) {
             const castedRequest: string = JSON.stringify(request);
             /*check if user is already present in the localStorage
             *if present, then simply redirect to another page
@@ -67,13 +64,9 @@ export class AuthenticationService {
             */
             if (this.localStorageCheckUser(castedRequest) === true) {
                 console.log('User found in localStorage');
-                this.logindata.setLoginStatus(true);
-
-                return Observable.of(this.logindata.getLoginStatus());
-
+                return Observable.of(true);
             } else {
                 console.log('User not found in localStorage');
-                this.logindata.setLoginStatus(false);
 
                 // send login request to Auth Service
                 // attaching headers to the request
@@ -98,6 +91,7 @@ export class AuthenticationService {
      */
     private extractloginAuthData(res: Response): boolean {
         this.authConnectionAttempt = 1;
+        let loginStatus = false;
         console.log('Auth Connection Attempt successful\nLoginResponse obtained from Auth Service');
         if (res.status === 200 && res.statusText === 'OK') {
             const body = res.text();
@@ -106,19 +100,18 @@ export class AuthenticationService {
             if (responseArray.loginstatus) {
                 console.log('Login successful');
                 if (this.localStorageAddUser(responseArray) === true) {
-                    this.logindata.setLoginStatus(true);
+                    loginStatus = true;
                 } else {
                     console.log('User couldn\'t be added to localStorage\nLogin Failed');
-                    this.logindata.setLoginStatus(false);
+                    loginStatus = false;
                 }
-                return this.logindata.getLoginStatus();
             } else {
                 console.log('Login failed');
             }
         } else {
             console.log('abnormal response' + res);
         }
-        return this.logindata.getLoginStatus();
+        return loginStatus;
     }
 
     /**
@@ -175,6 +168,53 @@ export class AuthenticationService {
             console.log('user added to localStorage');
             return true;
         }
+    }
+
+    /**
+     * Create insert request to authentication server to mentioned url
+     */
+    registerNewUser(request: RegisterRequest): Observable<boolean> {
+
+        // check if request is null
+        if (request && request.getUserName() && request.getUserName() && request.getUserRole()) {
+            // send register request to Auth Service
+            // attaching headers to the request
+            const headers: Headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            headers.append('Accept', 'application/json');
+            const options: RequestOptions = new RequestOptions({ headers });
+
+            console.log('Connecting to Auth Service...');
+            console.log('Login Request: ' + request);
+
+            // making a post request to Auth Service
+            return this.http.post(this._url_Auth_Login, request, options)
+                .map(data => this.extractRegisterAuthData(data))
+                .catch(this.errorhandler.handleError);
+        }
+    }
+
+    /**
+     * Get the response data for register request
+     */
+    private extractRegisterAuthData(res: Response): boolean {
+        this.authConnectionAttempt = 1;
+        console.log('Auth Connection Attempt successful\nRegisterResponse obtained from Auth Service');
+        if (res.status === 200 && res.statusText === 'OK') {
+            const body = res.text();
+            console.log('Register Response: ' + body);
+            const responseArray = JSON.parse(body);
+            if (responseArray.registerstatus) {
+                console.log('User Registered successfully!!');
+                return true;
+            } else {
+                console.log('User Registration failed!!');
+                return false;
+            }
+        } else {
+            console.log('abnormal response' + res);
+        }
+        return false;
     }
 
     logout(): void {
