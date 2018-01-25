@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
@@ -19,7 +18,6 @@ export class RegisterComponent implements OnInit {
   public loading = false;
   public failmessage = false;
   public error = '';
-  private person: RegisterRequest;
 
   constructor(private router: Router,
     private authenticationService: AuthenticationService) { }
@@ -35,24 +33,22 @@ export class RegisterComponent implements OnInit {
     // remove current user details from localStorage if present
     localStorage.removeItem('currentUser');
     // create an object containing the username, passowrd and userRole
-    this.person = new RegisterRequest();
-    this.person.setUsername(this.model.username);
-    this.person.setPassword(this.model.password);
-    this.person.setUserRole('admin');
-    // this.person.setUserRole(this.model.userrole);
-    // Call Authentication Service for initiating the LoginRequest
+    const registerRequest = new RegisterRequest();
+    registerRequest.setUsername(this.model.username);
+    registerRequest.setPassword(this.model.password);
+    registerRequest.setUserRole(this.model.userrole);
+    // Call Authentication Service for initiating the RegisterRequest
     console.log('Calling AuthenticationService...');
-    this.authenticationService.loginRest(this.person).subscribe(
+    this.authenticationService.register(registerRequest).subscribe(
       (data) => {
-        console.log('returned data: ', data);
-        if (data === true) {
-          // login successful, therefore navigate to another page
+        if (data) {
+          // Register successful, therefore navigate to another page
           console.log('navigating to landpage...');
           this.failmessage = false;
-          this.router.navigate(['/pages/landpage']);
+          this.router.navigate(['/login']);
         } else if (data === false) {
           // login failed
-          this.error = 'Username or password is incorrect';
+          this.error = 'Registration Failed';
           this.loading = false;
           this.failmessage = true;
         }

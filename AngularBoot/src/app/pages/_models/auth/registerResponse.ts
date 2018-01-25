@@ -2,37 +2,15 @@
  * POJO to creaet Insert new user into LDAP server
  */
 export class RegisterResponse {
-    private firstname: string;
-    private lastname: string;
     private username: string;
     private password: string;
-    private userrole: string;
-    private userexist: boolean;
-    private insertstatus: boolean;
+    private registerstatus: boolean;
 
-    public setFirstname(firstname) {
-        this.firstname = firstname;
-    }
-
-    public getFirstName() {
-        return this.firstname;
-    }
-
-
-    public setLastName(lastname) {
-        this.lastname = lastname;
-    }
-
-    public getLastName() {
-        return this.lastname;
-    }
-
-
-    public setUserName(username) {
+    public setUsername(username) {
         this.username = username;
     }
 
-    public getUserName() {
+    public getUsername() {
         return this.username;
     }
 
@@ -44,27 +22,12 @@ export class RegisterResponse {
         return this.password;
     }
 
-    public setuserRole(userrole) {
-        this.userrole = userrole;
+    setRegisterstatus(registerstatus: boolean) {
+        this.registerstatus = registerstatus;
     }
 
-    public getUserRole() {
-        return this.userrole;
+    getRegisterstatus(): boolean {
+        return this.registerstatus;
     }
 
-    public setUserExist(userexist) {
-        this.userexist = userexist;
-    }
-
-    public getUserExist() {
-        return this.userexist;
-    }
-
-    public setInsertStatus(insertstatus) {
-        this.insertstatus = insertstatus;
-    }
-
-    public getInsertStatus() {
-        return this.insertstatus;
-    }
 }

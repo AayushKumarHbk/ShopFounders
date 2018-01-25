@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
     this.person = new LoginRequest();
     this.person.setUsername(this.model.username);
     this.person.setPassword(this.model.password);
-    this.person.setUserRole('admin');
+    this.person.setUserRole(this.model.userrole);
     // this.person.setUserRole(this.model.userrole);
     // Call Authentication Service for initiating the LoginRequest
     console.log('Calling AuthenticationService...');

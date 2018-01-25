@@ -2,14 +2,13 @@ export class LoginResponse {
     username: string;
     password: string;
     role: string;
-    loginstatus : boolean;
-
+    loginstatus: boolean;
 
     setUsername(username: string) {
         this.username = username;
     }
 
-    getUserName():string {
+    getUserName(): string {
         return this.username;
     }
 
@@ -17,28 +16,24 @@ export class LoginResponse {
         this.password = username;
     }
 
-    getPassword():string {
+    getPassword(): string {
         return this.password;
-
     }
 
     setUserRole(role: string) {
         this.role = role;
     }
 
-    getUserRole():string {
+    getUserRole(): string {
         return this.role;
-
-
     }
 
-    setLoginStatus(status: boolean) {
-        this.loginstatus = status;
+    setLoginstatus(loginstatus: boolean) {
+        this.loginstatus = loginstatus;
     }
 
-    getLoginStatus() {
+    getLoginstatus(): boolean {
         return this.loginstatus;
     }
-
 
 }

@@ -13,6 +13,7 @@ import { NgaModule } from './theme/nga.module';
 import { AuthGuard } from './pages/_guards/index';
 import { AuthenticationService } from './pages/_services/index';
 import { RegisterComponent } from './pages/register/index';
+
 @NgModule({
   bootstrap: [AppComponent],
   declarations: [

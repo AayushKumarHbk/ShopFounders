@@ -79,7 +79,7 @@ export class AuthenticationService {
                 console.log('Login Request: ' + castedRequest);
 
                 // making a post request to Auth Service
-                return this.http.post(this._url_Auth_Login, castedRequest, options)
+                return this.http.post(this._url_Auth_Login, request, options)
                     .map(data => this.extractloginAuthData(data))
                     .catch(this.errorhandler.handleError);
             }
@@ -173,8 +173,7 @@ export class AuthenticationService {
     /**
      * Create insert request to authentication server to mentioned url
      */
-    registerNewUser(request: RegisterRequest): Observable<boolean> {
-
+    register(request: RegisterRequest): Observable<boolean> {
         // check if request is null
         if (request && request.getUserName() && request.getUserName() && request.getUserRole()) {
             // send register request to Auth Service
@@ -185,10 +184,10 @@ export class AuthenticationService {
             const options: RequestOptions = new RequestOptions({ headers });
 
             console.log('Connecting to Auth Service...');
-            console.log('Login Request: ' + request);
+            console.log('Register Request: ' + request);
 
             // making a post request to Auth Service
-            return this.http.post(this._url_Auth_Login, request, options)
+            return this.http.post(this._url_Auth_Register, request, options)
                 .map(data => this.extractRegisterAuthData(data))
                 .catch(this.errorhandler.handleError);
         }
@@ -204,7 +203,7 @@ export class AuthenticationService {
             const body = res.text();
             console.log('Register Response: ' + body);
             const responseArray = JSON.parse(body);
-            if (responseArray.registerstatus) {
+            if (responseArray.registerStatus) {
                 console.log('User Registered successfully!!');
                 return true;
             } else {
