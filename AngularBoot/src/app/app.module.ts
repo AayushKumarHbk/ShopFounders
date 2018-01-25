@@ -8,6 +8,8 @@ import { Http } from '@angular/http';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/index';
 import { routing } from './app.routing';
+import { PagesModule } from './pages/pages.module';
+import { NgaModule } from './theme/nga.module';
 import { AuthGuard } from './pages/_guards/index';
 import { AuthenticationService } from './pages/_services/index';
 import { RegisterComponent } from './pages/register/index';
@@ -22,9 +24,11 @@ import { RegisterComponent } from './pages/register/index';
     RouterModule,
     BrowserModule,
     routing,
+    PagesModule,
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
+    NgaModule,
   ],
   exports: [],
   providers: [
