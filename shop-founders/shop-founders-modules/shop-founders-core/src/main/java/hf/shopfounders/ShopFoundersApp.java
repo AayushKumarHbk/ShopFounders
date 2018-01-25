@@ -23,13 +23,27 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EntityScan("hf.shopfounders")
 public class ShopFoundersApp implements CommandLineRunner {
 
-    @GetMapping(value = "/getInfo")
+    @RequestMapping(value = "/getInfo")
     public String getFounderName() {
         return "Hidden Founders";
     }
 
     public static void main(String[] args) {
         SpringApplication.run(ShopFoundersApp.class);
+    }
+
+    @Bean
+    public WebMvcConfigurer corsFilterConfigurer() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/auth/*")
+                        .allowedOrigins("http://localhost:4200")
+                        .allowedMethods("POST", "ORIGIN", "GET")
+                        .allowedHeaders("Content-Type", "X-Requested-With", "accept", "Origin",
+                                "Access-Control-Request-Method", "Access-Control-Request-Headers");
+            }
+        };
     }
 
     @Override
