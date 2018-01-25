@@ -2,6 +2,8 @@ package hf.shopfounders.controller;
 
 import hf.shopfounders.model.LoginRequest;
 import hf.shopfounders.model.LoginResponse;
+import hf.shopfounders.model.RegisterRequest;
+import hf.shopfounders.model.RegisterResponse;
 import hf.shopfounders.repository.UserRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,4 +34,12 @@ public class AuthenticationController {
         return new ResponseEntity<LoginResponse>(response, new HttpHeaders(), HttpStatus.OK);
     }
 
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
+        logger.info("request received: "+request.toString());
+        RegisterResponse response = new RegisterResponse();
+        response.setRegisterStatus(true);
+        logger.info("sending response: "+response.toString());
+        return new ResponseEntity<RegisterResponse>(response, new HttpHeaders(), HttpStatus.OK);
+    }
 }
