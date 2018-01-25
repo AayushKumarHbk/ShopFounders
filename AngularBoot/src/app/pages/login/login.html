@@ -1,0 +1,47 @@
+<div class="auth-main">
+    <div class="auth-block">
+        <h1>Sign in ShopFinders</h1>
+        <a [routerLink]="['/register']" class="auth-link">New to Biometric
+           Bureau? Sign up!</a>
+        <form #loginform="ngForm">
+            <div class="form-group">
+                <label for="username">Username</label> <input type="text" class="form-control" minlength="5" maxlength="24"
+                    name="username" [(ngModel)]="model.username" #username="ngModel" required />
+                <div *ngIf="username.errors && (username.dirty || username.touched)" class="alert alert-danger">
+                    <div [hidden]="!username.errors.required">
+                        User Name is required
+                    </div>
+                    <div [hidden]="!username.errors.minlength">
+                        User Name must be at least 5 characters long.
+                    </div>
+                    <div [hidden]="!username.errors.maxlength">
+                        User Name cannot be more than 24 characters long.
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label> <input type="password" class="form-control" minlength="5" maxlength="24"
+                    name="password" [(ngModel)]="model.password" #password="ngModel" required />
+                <div *ngIf="password.errors && (password.dirty || password.touched)" class="alert alert-danger">
+                    <div [hidden]="!password.errors.required">
+                        Password is required
+                    </div>
+                    <div [hidden]="!password.errors.minlength">
+                        Password must be at least 5 characters long.
+                    </div>
+                    <div [hidden]="!password.errors.maxlength">
+                        Password cannot be more than 24 characters long.
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button (click)="loginRest()" [disabled]="!loginform.form.valid" class="btn btn-primary">Login</button>
+                <!--<a [routerLink]="['/login']" class="btn btn-link">Cancel</a>-->
+                <p *ngIf="failmessage" class="text-warning">
+                    <label for="Login Failed" class="control-label control-label"><p style="color:red">Please provide valid username and password</p></label>
+                </p>
+            </div>
+
+        </form>
+    </div>
+</div>

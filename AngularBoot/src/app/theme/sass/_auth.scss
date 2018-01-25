@@ -1,0 +1,62 @@
+@import 'conf/conf';
+
+$text-color: #ffffff;
+
+.img_logo {
+  display: inline-block; align-content:center;  margin: 20px auto; width: 200px; opacity: .7;
+}
+
+.auth-main {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: absolute; 
+  background-color: $bodyColor;
+  //background-image: url('../../../assets/img/peachy-bg.jpg');
+}
+
+.auth-block {
+  width: 540px;
+  margin: 0 auto;
+  border-radius: 5px;
+  @include bg-translucent-dark(0.55);
+  background-color: #3E4349;
+  border: 1px solid #6b6b6b;
+  //background: url('../../../assets/img/blur-bg-blurred.jpg');
+  color: #fff;
+  padding: 22px;
+  h1 {
+    font-weight: $font-light;
+    margin-bottom: 28px;
+    text-align: center;
+  }
+  p {
+    font-size: 16px;
+  }
+  a {
+    text-decoration: none;
+    outline: none;
+    transition: all 0.2s ease;
+    color: $primary;
+    &:hover {
+      color: $primary-dark;
+    }
+  }
+
+  .auth-link {
+    display: block;
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 33px;
+  }
+
+  .control-label {
+    padding-top: 11px;
+    color: $text-color;
+  }
+
+  .form-group {
+    margin-bottom: 12px;
+  }
+}

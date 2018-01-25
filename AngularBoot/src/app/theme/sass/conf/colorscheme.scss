@@ -1,0 +1,53 @@
+$primary: #7d7d7d !default;
+$info: #2dacd1 !default;
+$success: #90b900 !default;
+$warning: #dfb81c !default;
+$danger: #e85656 !default;
+
+$primary-light: tint($primary, 30%);
+$info-light: tint($info, 30%);
+$success-light: tint($success, 30%);
+$warning-light: tint($warning, 30%);
+$danger-light: tint($danger, 30%);
+
+$primary-dark: shade($primary, 15%);
+$info-dark: shade($info, 15%);
+$success-dark: shade($success, 15%);
+$warning-dark: shade($warning, 15%);
+$danger-dark: shade($danger, 15%);
+
+$primary-bg: tint($primary, 20%);
+$info-bg: tint($info, 20%);
+$success-bg: tint($success, 20%);
+$warning-bg: tint($warning, 20%);
+$danger-bg: tint($danger, 20%);
+
+$activelink: $primary;
+$hoverlink: $primary-dark;
+
+$bodyColor: #272B30;
+$top-header : #e23943;
+
+$sidebar-text: #ffffff;
+
+@mixin body-bg() {
+  background-color: $body-bg;
+
+  $mainBgUrl: $assets-root + $images-root + 'blur-bg.jpg';
+
+  &::before {
+    content: '';
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    //background: url($mainBgUrl) no-repeat center center;
+    background-size: cover;
+    will-change: transform;
+    z-index: 0;
+  }
+}
+@mixin additional-bg() {
+  //display: block; // additional background layer, hidden by default
+}
