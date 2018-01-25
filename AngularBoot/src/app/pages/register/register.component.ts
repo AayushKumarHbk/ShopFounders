@@ -43,7 +43,7 @@ export class RegisterComponent implements OnInit {
       (data) => {
         if (data) {
           // Register successful, therefore navigate to another page
-          console.log('navigating to landpage...');
+          console.log('navigating to login...');
           this.failmessage = false;
           this.router.navigate(['/login']);
         } else if (data === false) {
