@@ -1,10 +1,16 @@
 package hf.shopfounders.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class LoginResponse {
 
+    @JsonProperty("username")
     private String username;
+    @JsonProperty("password")
     private String password;
-    private LoginStatus loginstatus;
+    @JsonProperty("loginStatus")
+    private LoginStatus loginStatus;
+    @JsonProperty("token")
     private String token;
 
     public String getUsername() {
@@ -23,12 +29,12 @@ public class LoginResponse {
         this.password = password;
     }
 
-    public LoginStatus getLoginstatus() {
-        return loginstatus;
+    public LoginStatus getLoginStatus() {
+        return this.loginStatus;
     }
 
-    public void setLoginstatus(LoginStatus loginstatus) {
-        this.loginstatus = loginstatus;
+    public void setLoginStatus(LoginStatus loginStatus) {
+        this.loginStatus = loginStatus;
     }
 
     public String getToken() {
@@ -42,7 +48,7 @@ public class LoginResponse {
     @Override
     public String toString() {
         return String.format(
-                "LoginResponse[username='%s', password='%s',loginstatus='%s', token='%s']",
-                username, password, loginstatus, token);
+                "LoginResponse[username='%s', password='%s',loginStatus='%s', token='%s']",
+                username, password, loginStatus, token);
     }
 }

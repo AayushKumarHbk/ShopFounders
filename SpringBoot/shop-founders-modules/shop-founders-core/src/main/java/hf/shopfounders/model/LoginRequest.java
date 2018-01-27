@@ -2,13 +2,17 @@ package hf.shopfounders.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import hf.shopfounders.validation.ParamNotNull;
 
 public class LoginRequest {
 
+    @ParamNotNull
     @JsonProperty(value = "username")
     private String username;
+    @ParamNotNull
     @JsonProperty(value = "password")
     private String password;
+    @ParamNotNull
     @JsonProperty(value = "role")
     private String role;
 
@@ -38,18 +42,8 @@ public class LoginRequest {
 
     @Override
     public String toString() {
-        return this.getClass().getTypeName() + ": [" + username + ", " + password + ", " + role + "]";
-    }
-
-    /*
-     *  Method to check if request is valid
-     * */
-    @JsonIgnore
-    public boolean isValid() {
-        if((this.username != null && !this.username.isEmpty())
-                || (this.password == null && !this.password.isEmpty())
-                || this.role == null && !this.role.isEmpty())
-            return true;
-        return false;
+        return String.format(
+                "LoginRequest[username='%s', password='%s',role='%s']",
+                username, password, role);
     }
 }

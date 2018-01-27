@@ -1,8 +1,12 @@
 package hf.shopfounders.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class LoginStatus {
 
+    @JsonProperty("status")
     private boolean status;
+    @JsonProperty("message")
     private String message;
 
     public void setStatus(boolean status) {

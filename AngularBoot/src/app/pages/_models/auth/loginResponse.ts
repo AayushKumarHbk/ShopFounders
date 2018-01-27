@@ -4,13 +4,13 @@ export class LoginResponse {
     username: string;
     password: string;
     role: string;
-    loginstatus: LoginStatus;
+    loginStatus: LoginStatus;
 
     setUsername(username: string) {
         this.username = username;
     }
 
-    getUserName(): string {
+    getUsername(): string {
         return this.username;
     }
 
@@ -30,12 +30,12 @@ export class LoginResponse {
         return this.role;
     }
 
-    setLoginstatus(loginstatus: LoginStatus) {
-        this.loginstatus = loginstatus;
+    setLoginStatus(loginStatus: LoginStatus) {
+        this.loginStatus = loginStatus;
     }
 
-    getLoginstatus(): LoginStatus {
-        return this.loginstatus;
+    getLoginStatus(): LoginStatus {
+        return this.loginStatus;
     }
 
 }

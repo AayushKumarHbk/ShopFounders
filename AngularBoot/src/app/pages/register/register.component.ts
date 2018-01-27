@@ -31,11 +31,12 @@ export class RegisterComponent implements OnInit {
    */
   register() {
     console.log('RegisterComponent::register [ENTER]');
+    this.loading = true;
     this.message = 'registering user...';
     this.failmessage = true;
     // remove current user details from localStorage if present
     localStorage.removeItem('currentUser');
-    // create an object containing the username, passowrd and userRole
+    // create an object containing the username, password and userRole
     const registerRequest = new RegisterRequest();
     registerRequest.setUsername(this.model.username);
     registerRequest.setPassword(this.model.password);
@@ -47,7 +48,7 @@ export class RegisterComponent implements OnInit {
         const status: RegisterStatus = data.getRegisterStatus();
         if (status.getMessage() != null) {
           this.message = status.getMessage();
-          console.log(status.getMessage())
+          console.log(status.getMessage());
           this.failmessage = true;
           this.loading = false;
         } else { this.failmessage = false; }

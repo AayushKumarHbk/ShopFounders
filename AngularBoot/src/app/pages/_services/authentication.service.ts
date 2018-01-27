@@ -50,7 +50,7 @@ export class AuthenticationService {
     /**
      * It will call login REST API with requested username and password
      */
-    loginRest(request: LoginRequest): Observable<boolean> {
+    loginRest(request: LoginRequest): Observable<LoginResponse> {
         this.authConnectionAttempt = 0;
 
         this._url_Auth_Login = 'http://localhost:8080/auth/login';
@@ -64,7 +64,12 @@ export class AuthenticationService {
             */
             if (this.localStorageCheckUser(castedRequest) === true) {
                 console.log('User found in localStorage');
-                return Observable.of(true);
+                const responsePackage: LoginResponse = new LoginResponse();
+                const statusPackage: LoginStatus = new LoginStatus();
+                statusPackage.setStatus(true);
+                statusPackage.setMessage('User already logged in!!');
+                responsePackage.setLoginStatus(statusPackage);
+                return Observable.of(responsePackage);
             } else {
                 console.log('User not found in localStorage');
 
@@ -89,31 +94,35 @@ export class AuthenticationService {
     /**
      * Get the response data for login request
      */
-    private extractLoginAuthData(res: Response): boolean {
+    private extractLoginAuthData(res: Response): LoginResponse {
         this.authConnectionAttempt = 1;
-        let loginSuccess = false;
+        const responsePackage: LoginResponse = new LoginResponse();
+        const statusPackage: LoginStatus = new LoginStatus();
         console.log('Auth Connection Attempt successful\nLoginResponse obtained from Auth Service');
         if (res.status === 200 && res.statusText === 'OK') {
-            const body = res.text();
-            console.log('Login Response: ' + body);
-            const responseArray = JSON.parse(body);
-            const loginStatus: LoginStatus = responseArray.loginstatus;
-            console.log('loginStatus: ', JSON.stringify(loginStatus));
-            if (loginStatus.getStatus()) {
-                console.log('Login successful');
-                if (this.localStorageAddUser(responseArray) === false) {
-                    loginSuccess = true;
-                } else {
-                    console.log('User couldn\'t be added to localStorage\nLogin Failed');
-                    loginSuccess = false;
+            const responseArray = JSON.parse(res.text());
+            console.log('Login Response: ' + JSON.stringify(responseArray));
+            if (responseArray.loginStatus != null
+                && responseArray.loginStatus.status != null
+                && responseArray.loginStatus.message != null) {
+                statusPackage.setStatus(responseArray.loginStatus.status);
+                statusPackage.setMessage(responseArray.loginStatus.message);
+                if (statusPackage.getStatus()) {
+                    responsePackage.setUsername(responseArray.username);
+                    responsePackage.setPassword(responseArray.password);
+                    if (this.localStorageAddUser(responseArray) === false) {
+                        console.log('User [', responsePackage.getUsername(), '] added to localStorage successfully!!');
+                    } else {
+                        console.log('User [', responsePackage.getUsername(), '] could not be added to localStorage');
+                    }
                 }
-            } else {
-                console.log('Login failed');
             }
         } else {
             console.log('abnormal response' + res);
         }
-        return loginSuccess;
+        responsePackage.setLoginStatus(statusPackage);
+        console.log('AuthenticationService::login [EXIT]');
+        return responsePackage;
     }
 
     /**
@@ -212,13 +221,11 @@ export class AuthenticationService {
                 && responseArray.registerStatus.message != null) {
                 statusPackage.setStatus(responseArray.registerStatus.status);
                 statusPackage.setMessage(responseArray.registerStatus.message);
-            }
-            if (statusPackage.getStatus()) {
-                responsePackage.setUsername(responseArray.username);
-                responsePackage.setPassword(responseArray.password);
-                console.log('User [', responsePackage.getUsername(), '] registered successfully!!');
-            } else {
-                console.log('User registeration failed!!');
+                if (statusPackage.getStatus()) {
+                    responsePackage.setUsername(responseArray.username);
+                    responsePackage.setPassword(responseArray.password);
+                    console.log('User [', responsePackage.getUsername(), '] registered successfully!!');
+                }
             }
         } else {
             console.log('abnormal response' + res);

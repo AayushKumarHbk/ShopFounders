@@ -9,7 +9,9 @@ public interface BaseErrorCode {
     public String CODE1001 = "1001";  // Json processing error
     public String CODE1002 = "1002";  // A field has improper format
     public String CODE1003 = "1003";  // Required field(s) missing
-    public String CODE1101 = "1004";  // Invalid email/password pair
+    public String CODE1004 = "1004";  // Invalid email/password pair
+    public String CODE1005 = "1005";  // User not registered
+    public String CODE1006 = "1006";  // User logged in
 
     public String CODE2000 = "2000";  // Duplicate found
     public String CODE2001 = "2001";  // unexpected error with MongoDB

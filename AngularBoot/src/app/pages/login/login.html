@@ -37,7 +37,7 @@
                 <button (click)="loginRest()" [disabled]="!loginform.form.valid" class="btn btn-primary">Login</button>
                 <!--<a [routerLink]="['/login']" class="btn btn-link">Cancel</a>-->
                 <p *ngIf="failmessage" class="text-warning">
-                    <label for="Login Failed" class="control-label control-label"><p style="color:red">Please provide valid username and password</p></label>
+                    <label for="Login Failed" class="control-label control-label"><p style="color:red">{{message}}</p></label>
                 </p>
             </div>
 

@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map';
 
 import 'style-loader!./login.scss';
 import { AuthenticationService } from '../_services/index';
-import { LoginRequest, LoginResponse } from '../_models/index';
+import { LoginRequest, LoginStatus, LoginResponse } from '../_models/index';
 
 @Component({
   selector: 'login',
@@ -16,14 +16,11 @@ export class LoginComponent implements OnInit {
 
   public model: any = {};
   public loading = false;
-
   public failmessage = false;
-  public error = '';
-  private person: LoginRequest;
+  public message = '';
 
   constructor(private router: Router,
-    private authenticationService: AuthenticationService) {
-  }
+    private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
     this.model.userrole = 'user';
@@ -45,7 +42,7 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/pages/landpage']);
           } else {
             // login failed
-            this.error = 'Username or password is incorrect';
+            this.message = 'Username or password is incorrect';
             this.loading = false;
             this.failmessage = true;
           }
@@ -60,32 +57,36 @@ export class LoginComponent implements OnInit {
    *  it will create LoginRequest to the entered username and password
    */
   loginRest() {
+    console.log('LoginComponent::loginRest [ENTER]');
+    this.loading = true;
+    this.message = 'logging in...';
+    this.failmessage = true;
     // remove current user details from localStorage if present
     localStorage.removeItem('currentUser');
     // create an object containing the username, passowrd and userRole
-    this.person = new LoginRequest();
-    this.person.setUsername(this.model.username);
-    this.person.setPassword(this.model.password);
-    this.person.setUserRole(this.model.userrole);
-    // this.person.setUserRole(this.model.userrole);
+    const loginRequest = new LoginRequest();
+    loginRequest.setUsername(this.model.username);
+    loginRequest.setPassword(this.model.password);
+    loginRequest.setUserRole(this.model.userrole);
+
     // Call Authentication Service for initiating the LoginRequest
     console.log('Calling AuthenticationService...');
-    this.authenticationService.loginRest(this.person).subscribe(
+    this.authenticationService.loginRest(loginRequest).subscribe(
       (data) => {
-        console.log('returned data: ', data);
-        if (data === true) {
-          // login successful, therefore navigate to another page
-          console.log('navigating to landpage...');
-          this.failmessage = false;
-          this.router.navigate(['/pages/landpage']);
-        } else if (data === false) {
-          // login failed
-          this.error = 'Username or password is incorrect';
-          this.loading = false;
+        this.loading = false;
+        const status: LoginStatus = data.getLoginStatus();
+        if (status.getMessage()) {
+          this.message = status.getMessage();
+          console.log(status.getMessage());
           this.failmessage = true;
+        } else { this.failmessage = false; }
+        if (status.getStatus()) {
+          // Login successful, therefore navigate to Landpage
+          console.log('navigating to landpage...');
+          this.router.navigate(['/pages/landpage']);
         }
       }
     );
+    console.log('LoginComponent::loginRest [EXIT]');
   }
-
 }

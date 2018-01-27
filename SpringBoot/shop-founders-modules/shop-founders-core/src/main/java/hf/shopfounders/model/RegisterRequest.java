@@ -43,6 +43,8 @@ public class RegisterRequest {
 
     @Override
     public String toString() {
-        return this.getClass().getTypeName() + ": [" + username + ", " + password + ", " + role + "]";
+        return String.format(
+                "RegisterRequest[username='%s', password='%s',role='%s']",
+                username, password, role);
     }
 }

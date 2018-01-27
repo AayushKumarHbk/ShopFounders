@@ -1,9 +1,10 @@
 package hf.shopfounders.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hf.shopfounders.exception.BaseErrorCode;
+import hf.shopfounders.exception.*;
 import hf.shopfounders.model.*;
 import hf.shopfounders.repository.UserRepository;
+import hf.shopfounders.validation.ArgAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,19 +28,58 @@ public class AuthenticationController {
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        logger.info("request received: " + request.toString());
-        LoginResponse response = new LoginResponse();
+        logger.info("AuthenticationController::register request recieved:" + request.toString());
+        final DaoUser daoUser = new ObjectMapper().convertValue(request, DaoUser.class);
+        logger.info("request parsed to DaoUser" + daoUser.toString());
+        DaoUser searchedUser;
+        try{
+            logger.info("searching user in DB");
+            searchedUser = userRepository.findDaoUserByUsername(daoUser.getUsername());
+            ArgAssert.assertNotNull(searchedUser, "searchedUser");
+        }catch(IllegalArgumentException e) {
+            logger.info("User not found in DB");
+            final LoginResponse loginResponse= getLoginResponsePackage(daoUser.getUsername(),
+                    BaseErrorCode.getString(BaseErrorCode.CODE1005), false);
+            logger.info("sending response: " + loginResponse.toString());
+            return new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.OK);
+        }catch(Exception e) {
+            logger.error("Error from MongoDB");
+            final LoginResponse loginResponse= getLoginResponsePackage(daoUser.getUsername(),
+                    BaseErrorCode.getString(BaseErrorCode.CODE2001), false);
+            logger.info("sending response: " + loginResponse.toString());
+            return new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.OK);
+        }
+        boolean passwordMatches = false;
+        if(searchedUser.getPassword().equals(daoUser.getPassword()))
+            passwordMatches = true;
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setUsername(daoUser.getUsername());
         LoginStatus loginStatus = new LoginStatus();
-        loginStatus.setMessage("dummy message");
+        if(passwordMatches) {
+            loginStatus.setStatus(true);
+            loginStatus.setMessage("login successful");
+        }else {
+            loginStatus.setStatus(false);
+            loginStatus.setMessage(BaseErrorCode.getString(BaseErrorCode.CODE1004));
+        }
+        loginResponse.setLoginStatus(loginStatus);
+        logger.info("sending response: " + loginResponse.toString());
+        return new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.OK);
+    }
+
+    public LoginResponse getLoginResponsePackage(String username, String errorMessage, boolean status) {
+        final LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setUsername(username);
+        final LoginStatus loginStatus = new LoginStatus();
+        loginStatus.setMessage(errorMessage);
         loginStatus.setStatus(false);
-        response.setLoginstatus(loginStatus);
-        return new ResponseEntity<LoginResponse>(response, new HttpHeaders(), HttpStatus.OK);
+        loginResponse.setLoginStatus(loginStatus);
+        return loginResponse;
     }
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
         logger.info("AuthenticationController::register request recieved:" + request.toString());
-
         final DaoUser daoUser = new ObjectMapper().convertValue(request, DaoUser.class);
         logger.info("request parsed to DaoUser" + daoUser.toString());
         RegisterResponse response = new RegisterResponse();

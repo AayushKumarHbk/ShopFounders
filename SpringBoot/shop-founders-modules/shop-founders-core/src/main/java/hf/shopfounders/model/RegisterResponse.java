@@ -1,9 +1,14 @@
 package hf.shopfounders.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class RegisterResponse {
 
+    @JsonProperty("username")
     private String username;
+    @JsonProperty("password")
     private String password;
+    @JsonProperty("registerStatus")
     private RegisterStatus registerStatus;
 
     public String getUsername() {
