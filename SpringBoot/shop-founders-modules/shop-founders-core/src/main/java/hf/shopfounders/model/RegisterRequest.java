@@ -1,13 +1,19 @@
 package hf.shopfounders.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import hf.shopfounders.exception.BaseErrorCode;
+import hf.shopfounders.validation.ParamNotNull;
 
 public class RegisterRequest {
 
+    @ParamNotNull
     @JsonProperty(value = "username")
     private String username;
+    @ParamNotNull
     @JsonProperty(value = "password")
     private String password;
+    @ParamNotNull
     @JsonProperty(value = "role")
     private String role;
 

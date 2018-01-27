@@ -1,8 +1,10 @@
+import {LoginStatus} from './loginStatus';
+
 export class LoginResponse {
     username: string;
     password: string;
     role: string;
-    loginstatus: boolean;
+    loginstatus: LoginStatus;
 
     setUsername(username: string) {
         this.username = username;
@@ -28,11 +30,11 @@ export class LoginResponse {
         return this.role;
     }
 
-    setLoginstatus(loginstatus: boolean) {
+    setLoginstatus(loginstatus: LoginStatus) {
         this.loginstatus = loginstatus;
     }
 
-    getLoginstatus(): boolean {
+    getLoginstatus(): LoginStatus {
         return this.loginstatus;
     }
 

@@ -1,10 +1,9 @@
-/**
- * POJO to creaet Insert new user into LDAP server
- */
+import {RegisterStatus} from './registerStatus';
+
 export class RegisterResponse {
     private username: string;
     private password: string;
-    private registerstatus: boolean;
+    private registerStatus: RegisterStatus;
 
     public setUsername(username) {
         this.username = username;
@@ -22,12 +21,12 @@ export class RegisterResponse {
         return this.password;
     }
 
-    setRegisterstatus(registerstatus: boolean) {
-        this.registerstatus = registerstatus;
+    setRegisterStatus(registerStatus: RegisterStatus) {
+        this.registerStatus = registerStatus;
     }
 
-    getRegisterstatus(): boolean {
-        return this.registerstatus;
+    getRegisterStatus(): RegisterStatus {
+        return this.registerStatus;
     }
 
 }

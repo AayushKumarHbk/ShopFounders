@@ -37,7 +37,7 @@
             <button (click)="register()" [disabled]="!registerForm.form.valid" class="btn btn-primary">Register</button>
             <a [routerLink]="['/login']" class="btn btn-link">Cancel</a>
                 <p *ngIf="failmessage" class="text-warning">
-                    <label for="Login Failed" class="control-label control-label"><p style="color:red">User registration failed</p></label>
+                    <label for="Login Failed" class="control-label control-label"><p style="color:red">{{message}}</p></label>
                 </p>
             </div>
 

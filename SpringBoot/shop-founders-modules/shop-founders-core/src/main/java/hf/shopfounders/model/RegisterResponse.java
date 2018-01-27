@@ -4,7 +4,7 @@ public class RegisterResponse {
 
     private String username;
     private String password;
-    private boolean registerStatus;
+    private RegisterStatus registerStatus;
 
     public String getUsername() {
         return username;
@@ -22,16 +22,18 @@ public class RegisterResponse {
         this.password = password;
     }
 
-    public boolean getRegisterStatus() {
+    public RegisterStatus getRegisterStatus() {
         return registerStatus;
     }
 
-    public void setRegisterStatus(boolean registerStatus) {
+    public void setRegisterStatus(RegisterStatus registerStatus) {
         this.registerStatus = registerStatus;
     }
 
     @Override
     public String toString() {
-        return this.getClass().getTypeName() + ": [" + username + ", " + password + ", " + registerStatus + "]";
+        return String.format(
+                "RegisterResponse[username='%s', password='%s',registerStatus='%s']",
+                username, password, registerStatus);
     }
 }

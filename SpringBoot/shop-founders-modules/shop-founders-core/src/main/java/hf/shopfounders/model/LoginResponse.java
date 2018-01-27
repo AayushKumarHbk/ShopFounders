@@ -4,7 +4,7 @@ public class LoginResponse {
 
     private String username;
     private String password;
-    private boolean loginstatus;
+    private LoginStatus loginstatus;
     private String token;
 
     public String getUsername() {
@@ -23,11 +23,11 @@ public class LoginResponse {
         this.password = password;
     }
 
-    public boolean getLoginstatus() {
+    public LoginStatus getLoginstatus() {
         return loginstatus;
     }
 
-    public void setLoginstatus(boolean loginstatus) {
+    public void setLoginstatus(LoginStatus loginstatus) {
         this.loginstatus = loginstatus;
     }
 
@@ -41,6 +41,8 @@ public class LoginResponse {
 
     @Override
     public String toString() {
-        return this.getClass().getTypeName() + ": [" + username + ", " + password + ", " + loginstatus + token + "]";
+        return String.format(
+                "LoginResponse[username='%s', password='%s',loginstatus='%s', token='%s']",
+                username, password, loginstatus, token);
     }
 }

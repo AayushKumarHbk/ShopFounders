@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map';
 
 import 'style-loader!./register.scss';
 import { AuthenticationService } from '../_services/index';
-import { RegisterRequest, RegisterResponse } from '../_models/index';
+import { RegisterRequest, RegisterStatus, RegisterResponse } from '../_models/index';
 
 @Component({
   selector: 'register',
@@ -17,7 +17,7 @@ export class RegisterComponent implements OnInit {
   public model: any = {};
   public loading = false;
   public failmessage = false;
-  public error = '';
+  public message = '';
 
   constructor(private router: Router,
     private authenticationService: AuthenticationService) { }
@@ -30,6 +30,9 @@ export class RegisterComponent implements OnInit {
    *  it will create LoginRequest to the entered username and password
    */
   register() {
+    console.log('RegisterComponent::register [ENTER]');
+    this.message = 'registering user...';
+    this.failmessage = true;
     // remove current user details from localStorage if present
     localStorage.removeItem('currentUser');
     // create an object containing the username, passowrd and userRole
@@ -41,19 +44,21 @@ export class RegisterComponent implements OnInit {
     console.log('Calling AuthenticationService...');
     this.authenticationService.register(registerRequest).subscribe(
       (data) => {
-        if (data) {
+        const status: RegisterStatus = data.getRegisterStatus();
+        if (status.getMessage() != null) {
+          this.message = status.getMessage();
+          console.log(status.getMessage())
+          this.failmessage = true;
+          this.loading = false;
+        } else { this.failmessage = false; }
+        if (status.getStatus()) {
           // Register successful, therefore navigate to another page
           console.log('navigating to login...');
-          this.failmessage = false;
-          this.router.navigate(['/login']);
-        } else if (data === false) {
-          // login failed
-          this.error = 'Registration Failed';
-          this.loading = false;
-          this.failmessage = true;
+         this.router.navigate(['/login']);
         }
       }
     );
+    console.log('RegisterComponent::register [EXIT]');
   }
 
 }

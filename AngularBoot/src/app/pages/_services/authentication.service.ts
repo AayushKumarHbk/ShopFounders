@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { Router } from '@angular/router';
 
-import { LoginRequest, LoginStatus, LoginResponse, RegisterRequest, RegisterResponse } from '../_models/index';
+import { LoginRequest, LoginStatus, LoginResponse, RegisterRequest, RegisterStatus, RegisterResponse } from '../_models/index';
 import { WebserviceErrorHandler } from '../errohandler/errorhandler.component';
 
 @Injectable()
@@ -80,7 +80,7 @@ export class AuthenticationService {
 
                 // making a post request to Auth Service
                 return this.http.post(this._url_Auth_Login, request, options)
-                    .map(data => this.extractloginAuthData(data))
+                    .map(data => this.extractLoginAuthData(data))
                     .catch(this.errorhandler.handleError);
             }
         }
@@ -89,21 +89,23 @@ export class AuthenticationService {
     /**
      * Get the response data for login request
      */
-    private extractloginAuthData(res: Response): boolean {
+    private extractLoginAuthData(res: Response): boolean {
         this.authConnectionAttempt = 1;
-        let loginStatus = false;
+        let loginSuccess = false;
         console.log('Auth Connection Attempt successful\nLoginResponse obtained from Auth Service');
         if (res.status === 200 && res.statusText === 'OK') {
             const body = res.text();
             console.log('Login Response: ' + body);
             const responseArray = JSON.parse(body);
-            if (responseArray.loginstatus) {
+            const loginStatus: LoginStatus = responseArray.loginstatus;
+            console.log('loginStatus: ', JSON.stringify(loginStatus));
+            if (loginStatus.getStatus()) {
                 console.log('Login successful');
-                if (this.localStorageAddUser(responseArray) === true) {
-                    loginStatus = true;
+                if (this.localStorageAddUser(responseArray) === false) {
+                    loginSuccess = true;
                 } else {
                     console.log('User couldn\'t be added to localStorage\nLogin Failed');
-                    loginStatus = false;
+                    loginSuccess = false;
                 }
             } else {
                 console.log('Login failed');
@@ -111,7 +113,7 @@ export class AuthenticationService {
         } else {
             console.log('abnormal response' + res);
         }
-        return loginStatus;
+        return loginSuccess;
     }
 
     /**
@@ -173,7 +175,8 @@ export class AuthenticationService {
     /**
      * Create insert request to authentication server to mentioned url
      */
-    register(request: RegisterRequest): Observable<boolean> {
+    register(request: RegisterRequest): Observable<RegisterResponse> {
+        console.log('AuthenticationService::register [ENTER]');
         // check if request is null
         if (request && request.getUserName() && request.getUserName() && request.getUserRole()) {
             // send register request to Auth Service
@@ -184,7 +187,7 @@ export class AuthenticationService {
             const options: RequestOptions = new RequestOptions({ headers });
 
             console.log('Connecting to Auth Service...');
-            console.log('Register Request: ' + request);
+            console.log('Register Request: ' + JSON.stringify(request));
 
             // making a post request to Auth Service
             return this.http.post(this._url_Auth_Register, request, options)
@@ -196,24 +199,33 @@ export class AuthenticationService {
     /**
      * Get the response data for register request
      */
-    private extractRegisterAuthData(res: Response): boolean {
+    private extractRegisterAuthData(res: Response): RegisterResponse {
         this.authConnectionAttempt = 1;
+        const responsePackage: RegisterResponse = new RegisterResponse();
+        const statusPackage: RegisterStatus = new RegisterStatus();
         console.log('Auth Connection Attempt successful\nRegisterResponse obtained from Auth Service');
         if (res.status === 200 && res.statusText === 'OK') {
-            const body = res.text();
-            console.log('Register Response: ' + body);
-            const responseArray = JSON.parse(body);
-            if (responseArray.registerStatus) {
-                console.log('User Registered successfully!!');
-                return true;
+            const responseArray = JSON.parse(res.text());
+            console.log('Register Response: ' + JSON.stringify(responseArray));
+            if (responseArray.registerStatus != null
+                && responseArray.registerStatus.status != null
+                && responseArray.registerStatus.message != null) {
+                statusPackage.setStatus(responseArray.registerStatus.status);
+                statusPackage.setMessage(responseArray.registerStatus.message);
+            }
+            if (statusPackage.getStatus()) {
+                responsePackage.setUsername(responseArray.username);
+                responsePackage.setPassword(responseArray.password);
+                console.log('User [', responsePackage.getUsername(), '] registered successfully!!');
             } else {
-                console.log('User Registration failed!!');
-                return false;
+                console.log('User registeration failed!!');
             }
         } else {
             console.log('abnormal response' + res);
         }
-        return false;
+        responsePackage.setRegisterStatus(statusPackage);
+        console.log('AuthenticationService::register [EXIT]');
+        return responsePackage;
     }
 
     logout(): void {
