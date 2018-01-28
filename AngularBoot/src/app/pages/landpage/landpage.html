@@ -1,2 +1,10 @@
-<div class="row">
+<div class="row show-grid">
+    <div class="container text-center" style="float:left;margin-top:70px;">
+        <h3 style="color:white;">{{landpageHeading}}</h3>
+        <div *ngFor="let shop of retrievedShops" class="col-12">
+            <sf-card title="{{shop.city}}" style="float:left;">
+                <img src="{{shop.picture}}" width="200" height="200" />
+            </sf-card>
+        </div>
+    </div>
 </div>

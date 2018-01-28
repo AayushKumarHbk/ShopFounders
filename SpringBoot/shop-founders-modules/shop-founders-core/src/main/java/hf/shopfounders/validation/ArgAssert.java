@@ -2,6 +2,8 @@ package hf.shopfounders.validation;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Collection;
+
 /**
  * This class asserts that certain conditions related to method arguments are
  * met. Each method throws an {@link IllegalArgumentException} if the condition
@@ -104,6 +106,28 @@ public final class ArgAssert {
         if (StringUtils.isBlank(arg)) {
             throw new IllegalArgumentException(argName + " is blank");
         }
+        return arg;
+    }
+
+    /**
+     * Asserts that a specified collection is neither null nor empty.
+     *
+     * @param <T>
+     *            the type of the collection
+     * @param arg
+     *            the collection to check for emptiness
+     * @param argName
+     *            the name of the argument
+     * @return the collection that was validated
+     */
+    public static <T> Collection<T> assertNotEmpty(final Collection<T> arg,
+                                                   final String argName) {
+        assertNotNull(arg, argName);
+
+        if (arg.isEmpty()) {
+            throw new IllegalArgumentException(getEmptyErrorMessage(argName));
+        }
+
         return arg;
     }
 }

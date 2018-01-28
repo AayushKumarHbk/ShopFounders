@@ -13,7 +13,6 @@ export class AuthenticationService {
     private _url_Auth_Register = 'http://localhost:8080/auth/register';
     private _url_Auth_Login = 'http://localhost:8080/auth/login';
     http: Http;
-    private authConnectionAttempt: number;
     public errorhandler: WebserviceErrorHandler;
 
     constructor(private router: Router,
@@ -25,7 +24,7 @@ export class AuthenticationService {
         this.errorhandler = new WebserviceErrorHandler();
     }
 
-    login(username: string, password: string): Observable<boolean> {
+    public login(username: string, password: string): Observable<boolean> {
         return this.http.post(this._url_Auth_Login, JSON.stringify({ username: username, password: password }))
             .map((response: Response) => {
                 // login successful if there's a jwt token in the response
@@ -50,8 +49,7 @@ export class AuthenticationService {
     /**
      * It will call login REST API with requested username and password
      */
-    loginRest(request: LoginRequest): Observable<LoginResponse> {
-        this.authConnectionAttempt = 0;
+    public loginRest(request: LoginRequest): Observable<LoginResponse> {
 
         this._url_Auth_Login = 'http://localhost:8080/auth/login';
 
@@ -95,7 +93,6 @@ export class AuthenticationService {
      * Get the response data for login request
      */
     private extractLoginAuthData(res: Response): LoginResponse {
-        this.authConnectionAttempt = 1;
         const responsePackage: LoginResponse = new LoginResponse();
         const statusPackage: LoginStatus = new LoginStatus();
         console.log('Auth Connection Attempt successful\nLoginResponse obtained from Auth Service');
@@ -128,7 +125,7 @@ export class AuthenticationService {
     /**
      * check user is exist or not in localstorage
      */
-    localStorageCheckUser(currentUser): boolean {
+    private localStorageCheckUser(currentUser): boolean {
         const parsedCurrentUser = JSON.parse(currentUser);
 
         // array holding list of all users
@@ -154,7 +151,7 @@ export class AuthenticationService {
     /**
      *  Add user into local storage if user not present in localstorage
      */
-    localStorageAddUser(parsedCurrentUser): boolean {
+    private localStorageAddUser(parsedCurrentUser): boolean {
         console.log('Adding user [' + parsedCurrentUser.username + '] to localStorage');
 
         // array holding list of all users
@@ -184,7 +181,7 @@ export class AuthenticationService {
     /**
      * Create insert request to authentication server to mentioned url
      */
-    register(request: RegisterRequest): Observable<RegisterResponse> {
+    public register(request: RegisterRequest): Observable<RegisterResponse> {
         console.log('AuthenticationService::register [ENTER]');
         // check if request is null
         if (request && request.getUserName() && request.getUserName() && request.getUserRole()) {
@@ -209,7 +206,6 @@ export class AuthenticationService {
      * Get the response data for register request
      */
     private extractRegisterAuthData(res: Response): RegisterResponse {
-        this.authConnectionAttempt = 1;
         const responsePackage: RegisterResponse = new RegisterResponse();
         const statusPackage: RegisterStatus = new RegisterStatus();
         console.log('Auth Connection Attempt successful\nRegisterResponse obtained from Auth Service');

@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
           }
         });
     } else {
-      console.log('Provide mantadory fields');
+      console.log('Provide mandatory fields');
     }
 
   }

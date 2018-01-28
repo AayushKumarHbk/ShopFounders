@@ -1,6 +1,7 @@
 package hf.shopfounders.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hf.shopfounders.model.DaoUser;
 import hf.shopfounders.exception.*;
 import hf.shopfounders.model.*;
 import hf.shopfounders.repository.UserRepository;

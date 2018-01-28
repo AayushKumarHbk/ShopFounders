@@ -1,0 +1,8 @@
+<div sfCardBlur class="animated fadeIn card {{cardType}} {{sfCardClass || ''}}" zoom-in>
+    <div *ngIf="title" class="card-header clearfix" style="border: 1px solid #060606;">
+        <h3 class="card-title" translate>{{title}}</h3>
+    </div>
+    <div class="card-body" style="background-color: #2E3338;border: 1px solid #060606;">
+        <ng-content></ng-content>
+    </div>
+</div>

@@ -3,16 +3,18 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { routing } from './landpage.routing';
-import { LandPage } from './landpage.component';
+import { LandPageComponent } from './landpage.component';
+import { NgaModule } from '../../theme/nga.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    routing
+    routing,
+    NgaModule
   ],
   declarations: [
-    LandPage
+    LandPageComponent
   ]
 })
 export class LandpageModule {

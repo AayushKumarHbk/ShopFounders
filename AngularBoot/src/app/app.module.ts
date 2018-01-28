@@ -11,7 +11,7 @@ import { routing } from './app.routing';
 import { PagesModule } from './pages/pages.module';
 import { NgaModule } from './theme/nga.module';
 import { AuthGuard } from './pages/_guards/index';
-import { AuthenticationService } from './pages/_services/index';
+import { AuthenticationService, ShopManagementService } from './pages/_services/index';
 import { RegisterComponent } from './pages/register/index';
 
 @NgModule({
@@ -34,7 +34,8 @@ import { RegisterComponent } from './pages/register/index';
   exports: [],
   providers: [
     AuthGuard,
-    AuthenticationService],
+    AuthenticationService,
+    ShopManagementService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 

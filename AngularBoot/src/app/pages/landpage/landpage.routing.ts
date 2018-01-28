@@ -1,12 +1,12 @@
 import { Routes, RouterModule } from '@angular/router';
-import { LandPage } from './landpage.component';
+import { LandPageComponent } from './landpage.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: LandPage,
+    component: LandPageComponent,
     children: [
-      { path: 'landpage', component: LandPage }
+      { path: 'landpage', component: LandPageComponent }
     ]
   }
 ];

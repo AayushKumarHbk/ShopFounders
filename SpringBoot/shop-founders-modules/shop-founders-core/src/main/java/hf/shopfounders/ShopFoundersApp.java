@@ -11,8 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,7 +53,7 @@ public class ShopFoundersApp implements CommandLineRunner {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/auth/*")
+                registry.addMapping("/**")
                         .allowedOrigins("http://localhost:4200")
                         .allowedMethods("POST", "ORIGIN", "GET")
                         .allowedHeaders("Content-Type", "X-Requested-With", "accept", "Origin",
@@ -66,6 +64,7 @@ public class ShopFoundersApp implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
+
         logger.info("ShopFoundersApp::run [ENTER]");
         List<DaoUser> dummyUserList = Arrays.asList(
                 new DaoUser("admin", "admin", "admin"),
