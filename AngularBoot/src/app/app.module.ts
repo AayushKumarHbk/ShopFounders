@@ -13,7 +13,6 @@ import { NgaModule } from './theme/nga.module';
 import { AuthGuard } from './pages/_guards/index';
 import { AuthenticationService, ShopManagementService } from './pages/_services/index';
 import { RegisterComponent } from './pages/register/index';
-
 @NgModule({
   bootstrap: [AppComponent],
   declarations: [
@@ -35,7 +34,8 @@ import { RegisterComponent } from './pages/register/index';
   providers: [
     AuthGuard,
     AuthenticationService,
-    ShopManagementService],
+    ShopManagementService,
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 

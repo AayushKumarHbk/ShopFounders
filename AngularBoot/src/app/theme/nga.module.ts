@@ -6,9 +6,18 @@ import { SFCardBlur } from './components/sfCard/sfCardBlur.directive';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
-  declarations: [NavBarComponent, SFCardBlur, SFCard],
-  imports: [RouterModule, CommonModule],
-  exports: [NavBarComponent, SFCardBlur, SFCard],
+  declarations: [
+    NavBarComponent,
+    SFCardBlur,
+    SFCard,
+  ],
+  imports: [RouterModule,
+    CommonModule],
+  exports: [
+    NavBarComponent,
+    SFCardBlur,
+    SFCard,
+  ],
   providers: [],
   schemas: []
 })

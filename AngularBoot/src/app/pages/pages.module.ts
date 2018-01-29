@@ -7,7 +7,11 @@ import { Pages } from './pages.component';
 import { NgaModule } from '../theme/nga.module';
 
 @NgModule({
-  imports: [CommonModule, NgaModule, routing],
+  imports: [
+    CommonModule,
+    NgaModule,
+    routing,
+  ],
   declarations: [Pages],
   providers: [AuthGuard]
 })
