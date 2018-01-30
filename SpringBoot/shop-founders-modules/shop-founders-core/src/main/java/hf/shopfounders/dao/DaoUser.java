@@ -1,4 +1,4 @@
-package hf.shopfounders.model;
+package hf.shopfounders.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;

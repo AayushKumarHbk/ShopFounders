@@ -11,6 +11,15 @@ public class RegisterResponse {
     @JsonProperty("registerStatus")
     private RegisterStatus registerStatus;
 
+    public RegisterResponse() {
+    }
+
+    public RegisterResponse(String username, String password, RegisterStatus registerStatus) {
+        this.username = username;
+        this.password = password;
+        this.registerStatus = registerStatus;
+    }
+
     public String getUsername() {
         return username;
     }

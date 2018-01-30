@@ -2,17 +2,17 @@ package hf.shopfounders.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class GetAllShopsStatus {
+public class NearbyShopsStatus {
 
     @JsonProperty("status")
     private boolean status;
     @JsonProperty("message")
     private String message;
 
-    public GetAllShopsStatus() {
+    public NearbyShopsStatus() {
     }
 
-    public GetAllShopsStatus(boolean status, String message) {
+    public NearbyShopsStatus(boolean status, String message) {
         this.status = status;
         this.message = message;
     }
@@ -36,7 +36,7 @@ public class GetAllShopsStatus {
     @Override
     public String toString() {
         return String.format(
-                "GetAllShopsStatus[status='%s', message='%s']",
+                "NearbyShopsStatus[status='%s', message='%s']",
                 status, message);
     }
 }

@@ -1,6 +1,6 @@
 package hf.shopfounders.repository;
 
-import hf.shopfounders.model.DaoUser;
+import hf.shopfounders.dao.DaoUser;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

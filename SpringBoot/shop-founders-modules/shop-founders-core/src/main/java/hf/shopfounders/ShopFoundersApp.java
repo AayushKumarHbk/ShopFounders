@@ -1,6 +1,8 @@
 package hf.shopfounders;
 
-import hf.shopfounders.model.DaoUser;
+import hf.shopfounders.dao.DaoShopLikes;
+import hf.shopfounders.dao.DaoUser;
+import hf.shopfounders.repository.ShopLikesRepository;
 import hf.shopfounders.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 @SpringBootApplication
@@ -32,21 +35,34 @@ public class ShopFoundersApp implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(ShopFoundersApp.class);
 
     private UserRepository userRepository;
+    private ShopLikesRepository likesRepository;
 
-    public ShopFoundersApp(UserRepository userRepository) {
+    /*
+    * parametrized class constructor to initialize repositories
+    */
+    public ShopFoundersApp(UserRepository userRepository,ShopLikesRepository likesRepository) {
         this.userRepository = userRepository;
+        this.likesRepository = likesRepository;
     }
 
+    /**
+     * Rest end-point to get founder info
+     *
+     *  @return Founder name
+     * */
     @RequestMapping(value = "/getInfo")
     public String getFounderName() {
         logger.info("ShopFoundersApp::getFounderName [ENTER]");
-        return "Hidden Founders";
+        return "Aayush Kumar";
     }
 
     public static void main(String[] args) {
         SpringApplication.run(ShopFoundersApp.class);
     }
 
+    /**
+     * for configuring the CORS filter
+     */
     @Bean
     public WebMvcConfigurer corsFilterConfigurer() {
         logger.info("ShopFoundersApp::corsFilterConfigurer [ENTER]");
@@ -62,9 +78,11 @@ public class ShopFoundersApp implements CommandLineRunner {
         };
     }
 
+    /**
+     * sets the dummy data in repositories during start up
+     */
     @Override
     public void run(String... strings) throws Exception {
-
         logger.info("ShopFoundersApp::run [ENTER]");
         List<DaoUser> dummyUserList = Arrays.asList(
                 new DaoUser("admin", "admin", "admin"),
@@ -73,5 +91,7 @@ public class ShopFoundersApp implements CommandLineRunner {
         userRepository.deleteAll();
         logger.info("ShopFoundersApp::run inserting dummy List<DaoUsers>");
         userRepository.save(dummyUserList);
+        likesRepository.findAll().stream().forEach(p -> logger.info(p.toString()));
+        //likesRepository.deleteAll();
     }
 }

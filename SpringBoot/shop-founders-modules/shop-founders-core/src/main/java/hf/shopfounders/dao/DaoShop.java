@@ -1,7 +1,8 @@
-package hf.shopfounders.model;
+package hf.shopfounders.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import hf.shopfounders.model.DaoShopLocation;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

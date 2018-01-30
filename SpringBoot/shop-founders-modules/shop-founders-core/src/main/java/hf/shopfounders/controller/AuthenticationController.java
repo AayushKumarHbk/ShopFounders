@@ -1,7 +1,7 @@
 package hf.shopfounders.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hf.shopfounders.model.DaoUser;
+import hf.shopfounders.dao.DaoUser;
 import hf.shopfounders.exception.*;
 import hf.shopfounders.model.*;
 import hf.shopfounders.repository.UserRepository;
@@ -27,6 +27,14 @@ public class AuthenticationController {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Rest end-point
+     *
+     * @param request {@link LoginRequest} for login
+     *
+     * @return ResponseEntity<LoginResponse>
+     *     {@link LoginRequest} as a response to {@link LoginRequest}
+     */
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         logger.info("AuthenticationController::register request recieved:" + request.toString());
@@ -78,6 +86,14 @@ public class AuthenticationController {
         return loginResponse;
     }
 
+    /**
+     * Rest end-point
+     *
+     * @param request {@link RegisterRequest} to register a user
+     *
+     * @return ResponseEntity<RegisterResponse>
+     *     {@link RegisterResponse} as a response to {@link RegisterRequest}
+     */
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
         logger.info("AuthenticationController::register request recieved:" + request.toString());

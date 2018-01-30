@@ -15,6 +15,7 @@ public interface BaseErrorCode {
 
     public String CODE2000 = "2000";  // Duplicate found
     public String CODE2001 = "2001";  // unexpected error with MongoDB
+    public String CODE2002 = "2002";  // empty list(s) retrieved from database
 
     ResourceBundle BASE_LABELS = ResourceBundle.getBundle("BaseErrorCode");
 
