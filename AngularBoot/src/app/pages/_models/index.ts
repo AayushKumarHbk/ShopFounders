@@ -9,3 +9,6 @@ export * from './shop/daoShop';
 export * from './shop/daoShopLocation';
 export * from './shop/getAllShopsResponse';
 export * from './shop/getAllShopsStatus';
+export * from './shop/processLikes/shopLikeRequest';
+export * from './shop/processLikes/shopLikeResponse';
+export * from './shop/processLikes/shopLikeStatus';

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'pages',
@@ -9,10 +10,7 @@ import { Routes } from '@angular/router';
 })
 export class Pages {
 
-  constructor() {
+  constructor(private router: Router) {
   }
 
-  ngOnInit() {
-  }
 }
-

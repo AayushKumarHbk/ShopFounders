@@ -7,7 +7,6 @@ import { RegisterComponent } from './pages/register/index';
 
 
 export const routes: Routes = [
-
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: '', component: Pages, canActivate: [AuthGuard] },

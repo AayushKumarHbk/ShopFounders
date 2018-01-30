@@ -1,6 +1,6 @@
 <div class="row show-grid">
     <div class="container text-center" style="float:left;margin-top:70px;">
-        <h3 style="color:white;">{{landpageHeading}}</h3>
+        <h3 style="color:white;">{{pageHeading}}</h3>
         <agm-map [latitude]="lat" [longitude]="lng">
             <agm-marker [latitude]="lat" [longitude]="lng">
                 <agm-info-window>
@@ -14,6 +14,10 @@
         <div *ngFor="let shop of retrievedShops" class="col-12">
             <sf-card title="{{shop.city}}" style="float:left;">
                 <img src="{{shop.picture}}" width="200" height="200" />
+                <div class="form-group">
+                    <button (click)="likeShop(shop._id, 1)">Like</button>
+                    <button (click)="likeShop(shop._id, 0)">Unlike</button>
+                </div>
             </sf-card>
         </div>
     </div>

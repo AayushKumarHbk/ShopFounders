@@ -32,14 +32,14 @@ export class LoginComponent implements OnInit {
     console.log(this.model.password);
     console.log(this.model.userrole);
     if (this.model.username != null && this.model.password != null) {
-      // this.router.navigate(['/pages/landpage']);
+      // this.router.navigate(['/pages/nearbyShops']);
       this.authenticationService.login(this.model.username, this.model.password)
         .subscribe(result => {
           if (result === true) {
             // login successful
             this.failmessage = false;
             console.log(this.failmessage);
-            this.router.navigate(['/pages/landpage']);
+            this.router.navigate(['/pages/nearbyShops']);
           } else {
             // login failed
             this.message = 'Username or password is incorrect';
@@ -81,9 +81,9 @@ export class LoginComponent implements OnInit {
           this.failmessage = true;
         } else { this.failmessage = false; }
         if (status.getStatus()) {
-          // Login successful, therefore navigate to Landpage
-          console.log('navigating to landpage...');
-          this.router.navigate(['/pages/landpage']);
+          // Login successful, therefore navigate to NearbyShops
+          console.log('navigating to nearbyShops...');
+          this.router.navigate(['/pages/nearbyShops']);
         }
       }
     );

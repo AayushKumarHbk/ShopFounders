@@ -4,13 +4,22 @@ import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { Router } from '@angular/router';
 
-import { DaoShop, DaoShopLocation, GetAllShopsResponse, GetAllShopsStatus } from '../_models/index';
+import {
+    DaoShop,
+    DaoShopLocation,
+    GetAllShopsResponse,
+    GetAllShopsStatus,
+    ShopLikeRequest,
+    ShopLikeStatus,
+    ShopLikeResponse
+} from '../_models/index';
 import { WebserviceErrorHandler } from '../errohandler/errorhandler.component';
 
 @Injectable()
 export class ShopManagementService {
 
     private _url_shop_getAllShops = 'http://localhost:8080/shop/getAllShops';
+    private _url_Shop_ProcessLikes = 'http://localhost:8080/shop/processLikes';
     http: Http;
     public errorhandler: WebserviceErrorHandler;
 
@@ -23,6 +32,7 @@ export class ShopManagementService {
     }
 
     public getAllShops(): Observable<GetAllShopsResponse> {
+        console.log('ShopManagementService::getAllShops [ENTER]');
         // creates Http Header
         const headers: Headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -82,7 +92,59 @@ export class ShopManagementService {
             console.log('abnormal response' + res);
         }
         responsePackage.setGetAllShopsStatus(statusPackage);
-        console.log('ShopManagementService::register [EXIT]');
+        console.log('ShopManagementService::extractGetAllShopsData [EXIT]');
+        return responsePackage;
+    }
+
+    /**
+     * Validates the request, creates an HTTP Request package
+     * and makes a post request to the REST service
+     */
+    public processLike(request: ShopLikeRequest): Observable<ShopLikeResponse> {
+        // check if request is null
+        if (request && request.getUserId() && request.getShopId() && request.getLikeType()) {
+
+            // attaching headers to the request
+            const headers: Headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            headers.append('Accept', 'application/json');
+            const options: RequestOptions = new RequestOptions({ headers });
+
+            console.log('ProcessLike Request: ' + request);
+            console.log('Connecting to Shop Service...');
+
+            // making a post request to Shop Service
+            return this.http.post(this._url_Shop_ProcessLikes, request, options)
+                .map(data => this.extractProcessLikeShopData(data))
+                .catch(this.errorhandler.handleError);
+        }
+    }
+
+    /**
+     * Parses the received response
+     * and returns a response package
+     */
+    private extractProcessLikeShopData(res: Response): ShopLikeResponse {
+        const responsePackage: ShopLikeResponse = new ShopLikeResponse();
+        const statusPackage: ShopLikeStatus = new ShopLikeStatus();
+        console.log('Auth Connection Attempt successful\nShopLikeResponse obtained from Shop Service');
+        if (res.status === 200 && res.statusText === 'OK') {
+            const responseArray = JSON.parse(res.text());
+            console.log('ProcessLike Response: ' + JSON.stringify(responseArray));
+            if (responseArray.likeStatus != null) {
+                statusPackage.setStatus(responseArray.likeStatus.status);
+                statusPackage.setMessage(responseArray.likeStatus.message);
+                if (statusPackage.getStatus()) {
+                    responsePackage.setUserId(responseArray.userId);
+                    responsePackage.setShopId(responseArray.shopId);
+                    responsePackage.setLikeType(responseArray.likeType);
+                }
+            }
+        } else {
+            console.log('abnormal response' + res);
+        }
+        responsePackage.setLikeStatus(statusPackage);
+        console.log('ShopManagementService::login [EXIT]');
         return responsePackage;
     }
 }
