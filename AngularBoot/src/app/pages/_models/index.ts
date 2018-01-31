@@ -12,3 +12,4 @@ export * from './shop/getAllShopsStatus';
 export * from './shop/processLikes/shopLikeRequest';
 export * from './shop/processLikes/shopLikeResponse';
 export * from './shop/processLikes/shopLikeStatus';
+export * from './shop/preferredShops/preferredShopsRequest';

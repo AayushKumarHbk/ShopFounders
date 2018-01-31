@@ -7,6 +7,7 @@ import { AuthGuard } from './_guards/index';
 import { Pages } from './pages.component';
 import { NgaModule } from '../theme/nga.module';
 import { NearbyShopsComponent } from './nearbyShops/index';
+import { PreferredShopsComponent } from './preferredShops/index';
 /**
  * angular google maps
  */
@@ -27,7 +28,8 @@ import { environment } from '../../environments/environment';
     })
   ],
   declarations: [Pages,
-    NearbyShopsComponent],
+    NearbyShopsComponent,
+    PreferredShopsComponent],
   providers: [AuthGuard]
 })
 export class PagesModule {

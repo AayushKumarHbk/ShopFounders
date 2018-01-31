@@ -46,12 +46,11 @@ export class NearbyShopsComponent implements OnInit, OnDestroy {
         this.pageHeading = 'Fetching shops, Please wait...';
         this.shopService.getAllShops().subscribe(
             data => {
-                console.log(JSON.stringify(data));
                 if (data.getGetAllShopsStatus() != null) {
                     const getAllShopsStatus = data.getGetAllShopsStatus();
                     if (getAllShopsStatus.getStatus()) {
                         this.retrievedShops = data.getShops();
-                        this.pageHeading = 'Displaying ' + this.retrievedShops.length + ' shops';
+                        this.pageHeading = 'Displaying ' + this.retrievedShops.length + ' shops nearby';
                         // console.log(this.retrievedShops);
                         /* this.getDistance(); */
                     } else {
@@ -67,7 +66,8 @@ export class NearbyShopsComponent implements OnInit, OnDestroy {
         const userId = this.getUserFromLocalStorage();
         if (userId != null) {
             console.log('like type: ' + likeType);
-            const likeRequest = new ShopLikeRequest(userId, _id, 1);
+            const likeRequest = new ShopLikeRequest(userId, _id, likeType);
+            console.log(JSON.stringify(likeRequest));
             this.shopService.processLike(likeRequest)
                 .subscribe(result => {
                     if (result.getLikeStatus() != null) {
