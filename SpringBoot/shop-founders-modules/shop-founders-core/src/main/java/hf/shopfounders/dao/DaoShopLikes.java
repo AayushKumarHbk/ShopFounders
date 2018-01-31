@@ -5,16 +5,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import hf.shopfounders.model.ShopLikeType;
 import hf.shopfounders.model.ShopLikeStatus;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 @Document(collection = "LikeTable_Shop")
+@CompoundIndexes({
+        @CompoundIndex(name = "userId_shopId", def = "{'userId' : 1, 'shopId': 1}", unique = true)
+})
 public class DaoShopLikes {
 
-    @JsonIgnore
-    @Id
-    private String id;
     @JsonProperty("userId")
     private String userId;
     @JsonProperty("shopId")
@@ -32,10 +34,6 @@ public class DaoShopLikes {
         this.shopId = shopId;
         this.likeType = likeType;
         this.likeDate = likeDate;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getUserId() {
@@ -73,7 +71,7 @@ public class DaoShopLikes {
     @Override
     public String toString() {
         return String.format(
-                "DaoShop[id='%s', userId='%s', shopId='%s', likeType='%d', likeDate='%s']",
-                id, userId, shopId, likeType, likeDate.toString());
+                "DaoShop[userId='%s', shopId='%s', likeType='%d', likeDate='%s']",
+                userId, shopId, likeType, likeDate.toString());
     }
 }

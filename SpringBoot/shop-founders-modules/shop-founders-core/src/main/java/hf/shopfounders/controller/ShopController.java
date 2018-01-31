@@ -1,6 +1,7 @@
 package hf.shopfounders.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.MongoClient;
 import hf.shopfounders.dao.DaoShopLikes;
 import hf.shopfounders.exception.BaseErrorCode;
 import hf.shopfounders.dao.DaoShop;
@@ -11,7 +12,12 @@ import hf.shopfounders.validation.ArgAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Update.update;
+import static org.springframework.data.mongodb.core.query.Query.query;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,38 +52,26 @@ public class ShopController {
         try{
             logger.info("searching for shops in DB");
             shopList = shopRepository.findAll();
+            ArgAssert.assertNotEmpty(shopList, "shopList");
             logger.info(shopList.size()+" shop(s) found");
         }catch(IllegalArgumentException e) {
             logger.info("User not found in DB");
-            final GetAllShopsResponse response= createGetAllShopsResponse(null,
-                    BaseErrorCode.getString(BaseErrorCode.CODE1005), false);
+            final GetAllShopsResponse response = new GetAllShopsResponse(
+                    null, new GetAllShopsStatus(
+                    false, BaseErrorCode.getString(BaseErrorCode.CODE1005)));
             logger.info("sending response: " + response.toString());
             return new ResponseEntity<GetAllShopsResponse>(response, HttpStatus.OK);
         }catch(Exception e) {
             logger.error("Error from MongoDB");
-            final GetAllShopsResponse response= createGetAllShopsResponse(null,
-                    BaseErrorCode.getString(BaseErrorCode.CODE2001), false);
+            final GetAllShopsResponse response = new GetAllShopsResponse(
+                    null, new GetAllShopsStatus(
+                    false, BaseErrorCode.getString(BaseErrorCode.CODE2001)));
             logger.info("sending response: " + response.toString());
             return new ResponseEntity<GetAllShopsResponse>(response, HttpStatus.OK);
         }
         final String message = shopList.size() + " shop(s) found";
-        return new ResponseEntity<GetAllShopsResponse>(
-                createGetAllShopsResponse(shopList, message, true),
-                new HttpHeaders(),
-                HttpStatus.OK);
-    }
-
-    public GetAllShopsResponse createGetAllShopsResponse(List<DaoShop> shopList, String message, boolean status) {
-        GetAllShopsResponse response = new GetAllShopsResponse();
-        GetAllShopsStatus shopsStatus = new GetAllShopsStatus();
-        shopsStatus.setMessage(message);
-        shopsStatus.setStatus(status);
-        if(status) {
-            ArgAssert.assertNotEmpty(shopList, "shopList");
-            response.setShops(shopList);
-        }
-        response.setGetAllShopsStatus(shopsStatus);
-        return response;
+        final GetAllShopsResponse response = new GetAllShopsResponse(shopList, new GetAllShopsStatus(true, message));
+        return new ResponseEntity<GetAllShopsResponse>(response, new HttpHeaders(), HttpStatus.OK);
     }
 
     /**
@@ -97,10 +91,16 @@ public class ShopController {
         logger.info("request parsed to DaoShopLikes" + daoShopLikes.toString());
         try {
             logger.info("attempting to insert data in DB");
-            likesRepository.save(daoShopLikes);
-        }catch (DuplicateKeyException e) {
+            DaoShopLikes retrievedDocument = likesRepository.findByUserIdAndAndShopId(
+                    daoShopLikes.getUserId(), daoShopLikes.getShopId());
+            MongoOperations mongoOperations = new MongoTemplate(new SimpleMongoDbFactory(new MongoClient(), "shops"));
+            mongoOperations.upsert(query(where("userId").is(daoShopLikes.getUserId()))
+                            .addCriteria(where("shopId").is(daoShopLikes.getShopId())),
+                    update("likeType", daoShopLikes.getLikeType()),
+                    DaoShopLikes.class);
+        }catch (Exception e) {
             logger.trace(e.getMessage());
-            final String errorMessage = BaseErrorCode.getString(BaseErrorCode.CODE2000);
+            final String errorMessage = BaseErrorCode.getString(BaseErrorCode.CODE2001);
             ShopLikeResponse likeResponse = new ShopLikeResponse(
                     daoShopLikes.getUserId(),
                     daoShopLikes.getShopId(),
@@ -121,14 +121,15 @@ public class ShopController {
     /**
      * Rest end-point to get nearby shops
      *
-     * @param username username
+     * @param request username
      *
      * @return ResponseEntity<NearbyShopsResponse>
-     *     {@link NearbyShopsResponse} as a response
+     *     {@link NearbyShopsResponse} as a response to {@link PreferredShopsRequest}
      */
-    @PostMapping(value = "/getNearbyShops", consumes = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<NearbyShopsResponse> getNearbyShops(@RequestBody String username) {
-        logger.info("AuthenticationController::getAllShops request recieved:"+ username);
+    @PostMapping(value = "/preferredShops", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PreferredShopsResponse> preferredShops(@RequestBody PreferredShopsRequest request) {
+        logger.info("AuthenticationController::getAllShops request received:"+ request);
+        final String username = request.getUsername();
         List<DaoShop> shopList = null;
         try{
             ArgAssert.assertNotEmpty(username, "username");
@@ -136,7 +137,8 @@ public class ShopController {
             ArgAssert.assertNotEmpty(shopList, "shop list");
             logger.info(shopList.size()+" shop(s) found");
             List<DaoShopLikes> likesList = likesRepository.findAll();
-            likesList.removeIf(p->!p.getUserId().equals(username));
+            likesList.removeIf(p->!p.getUserId().equals(username) || p.getLikeType() == 0);
+            likesList.removeIf(p->p.getLikeType() == 0);
             shopList.removeIf(x->
                     !likesList.stream().anyMatch(y->y.getShopId().equals(x.get_id()))
             );
@@ -145,29 +147,29 @@ public class ShopController {
             //shopList.stream().forEach(p -> logger.info(p.toString()));
         }catch(NullPointerException e) {
             logger.info("error while processing list(s)");
-            final NearbyShopsResponse response = new NearbyShopsResponse(
-                    null, new NearbyShopsStatus(
+            final PreferredShopsResponse response = new PreferredShopsResponse(
+                    null, new PreferredShopsStatus(
                     false, BaseErrorCode.getString(BaseErrorCode.CODE2002)));
             logger.info("sending response: " + response.toString());
-            return new ResponseEntity<NearbyShopsResponse>(response, HttpStatus.OK);
+            return new ResponseEntity<PreferredShopsResponse>(response, HttpStatus.OK);
         }catch(IllegalArgumentException e) {
             logger.info(e.getMessage());
-            final NearbyShopsResponse response = new NearbyShopsResponse(
-                    null, new NearbyShopsStatus(false, e.getMessage()));
+            final PreferredShopsResponse response = new PreferredShopsResponse(
+                    null, new PreferredShopsStatus(false, e.getMessage()));
             logger.info("sending response: " + response.toString());
-            return new ResponseEntity<NearbyShopsResponse>(response, HttpStatus.OK);
+            return new ResponseEntity<PreferredShopsResponse>(response, HttpStatus.OK);
         }catch(Exception e) {
             logger.error("Error from MongoDB");
-            final NearbyShopsResponse response = new NearbyShopsResponse(
-                    null, new NearbyShopsStatus(
+            final PreferredShopsResponse response = new PreferredShopsResponse(
+                    null, new PreferredShopsStatus(
                     false, BaseErrorCode.getString(BaseErrorCode.CODE2001)));
             logger.info("sending response: " + response.toString());
-            return new ResponseEntity<NearbyShopsResponse>(response, HttpStatus.OK);
+            return new ResponseEntity<PreferredShopsResponse>(response, HttpStatus.OK);
         }
         final String message = shopList.size() + " shop(s) found";
-        final NearbyShopsResponse response = new NearbyShopsResponse(
-                shopList, new NearbyShopsStatus(true, message));
+        final PreferredShopsResponse response = new PreferredShopsResponse(
+                shopList, new PreferredShopsStatus(true, message));
         logger.info("sending response: " + response.toString());
-        return new ResponseEntity<NearbyShopsResponse>(response, new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<PreferredShopsResponse>(response, new HttpHeaders(), HttpStatus.OK);
     }
 }

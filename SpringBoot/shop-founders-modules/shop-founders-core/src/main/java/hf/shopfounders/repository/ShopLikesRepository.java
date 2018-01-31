@@ -14,4 +14,5 @@ import java.util.List;
 public interface ShopLikesRepository extends MongoRepository<DaoShopLikes, String> {
 
     public List<DaoShopLikes> findDaoShopLikesByUserId(String username);
+    public DaoShopLikes findByUserIdAndAndShopId(String userId, String shopId);
 }
