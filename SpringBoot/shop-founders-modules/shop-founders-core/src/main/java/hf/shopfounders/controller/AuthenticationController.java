@@ -63,6 +63,8 @@ public class AuthenticationController {
             passwordMatches = true;
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setUsername(daoUser.getUsername());
+        loginResponse.setPassword(daoUser.getPassword());
+        loginResponse.setRole(daoUser.getRole());
         LoginStatus loginStatus = new LoginStatus();
         if(passwordMatches) {
             loginStatus.setStatus(true);

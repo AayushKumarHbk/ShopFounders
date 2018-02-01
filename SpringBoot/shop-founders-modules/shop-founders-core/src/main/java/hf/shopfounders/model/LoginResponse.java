@@ -8,6 +8,8 @@ public class LoginResponse {
     private String username;
     @JsonProperty("password")
     private String password;
+    @JsonProperty("role")
+    private String role;
     @JsonProperty("loginStatus")
     private LoginStatus loginStatus;
     @JsonProperty("token")
@@ -27,6 +29,14 @@ public class LoginResponse {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public LoginStatus getLoginStatus() {

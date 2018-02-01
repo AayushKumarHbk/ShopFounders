@@ -128,20 +128,17 @@ export class AuthenticationService {
     private localStorageCheckUser(currentUser): boolean {
         const parsedCurrentUser = JSON.parse(currentUser);
 
-        // array holding list of all users
-        const usersArray = new Array();
-        usersArray.push(parsedCurrentUser);
-
         /*localStorage.setItem('users', JSON.stringify(usersArray));*/
 
         console.log('Searching for user' + parsedCurrentUser.username + ' in the localStorage');
-        const users: any[] = JSON.parse(localStorage.getItem('users')) || [];
+        const users: any[] = JSON.parse(localStorage.getItem('currentUser')) || [];
         const duplicateUser = users.filter(
             user => user.username === parsedCurrentUser.username
                 && user.password === parsedCurrentUser.password
                 && user.userrole === parsedCurrentUser.userrole).length;
+        users.push(parsedCurrentUser);
+        // localStorage.setItem('currentUser', JSON.stringify(duplicateUser));
         if (duplicateUser) {
-            localStorage.setItem('currentUser', JSON.stringify(duplicateUser));
             return true;
         } else {
             return false;
@@ -154,25 +151,25 @@ export class AuthenticationService {
     private localStorageAddUser(parsedCurrentUser): boolean {
         console.log('Adding user [' + parsedCurrentUser.username + '] to localStorage');
 
-        // array holding list of all users
-        const usersArray = new Array();
-        usersArray.push(parsedCurrentUser);
-
-        // array holding current user
-        const currentUserArray = new Array();
-        currentUserArray.push(parsedCurrentUser);
-
         // Dedup the currentUser from localStorage and accordingly, add the user to localStorage
         console.log('Searching for user [' + parsedCurrentUser.username + '] in the localStorage');
         const users: any[] = JSON.parse(localStorage.getItem('users')) || [];
         const duplicateUser = users.filter(user => user.username === parsedCurrentUser.username).length;
+
+        // array holding current user
+        const currentUserArray = new Array();
+        currentUserArray.push(parsedCurrentUser);
+        localStorage.setItem('currentUser', JSON.stringify(currentUserArray));
+
         if (duplicateUser) {
             console.log('user already present in localStorage');
             return true;
         } else {
+
+
             // add data in localStorage
-            localStorage.setItem('users', JSON.stringify(usersArray));
-            localStorage.setItem('currentUser', JSON.stringify(currentUserArray));
+            users.push(parsedCurrentUser);
+            localStorage.setItem('users', JSON.stringify(users));
             console.log('user added to localStorage');
             return true;
         }

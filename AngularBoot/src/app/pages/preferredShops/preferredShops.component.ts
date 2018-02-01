@@ -61,14 +61,12 @@ export class PreferredShopsComponent implements OnInit, OnDestroy {
             request.setUsername(userId);
             this.shopService.getPreferredShops(request).subscribe(
                 data => {
-                    console.log(JSON.stringify(data));
                     if (data.getPreferredShopsStatus() != null) {
                         const getNearbyShopsStatus = data.getPreferredShopsStatus();
                         if (getNearbyShopsStatus.getStatus()) {
                             const shopsList = data.getShops();
                             if (this.mapLoaded) {
                                 for (const shop of shopsList) {
-                                    console.log(shop.getLocation());
                                     const coords = shop.getLocation().getCoordinates();
                                     shop.setDistance(this.distance(coords[0], coords[1], this.lat, this.lng, 'K'));
                                 }
@@ -103,7 +101,6 @@ export class PreferredShopsComponent implements OnInit, OnDestroy {
             this.shopService.removeLike(likeRequest)
                 .subscribe(result => {
                     if (result.getLikeStatus() != null) {
-                        console.log(result.getLikeStatus());
                         if (result.getLikeStatus().getStatus()) {
                             document.getElementById(result.getShopId()).remove();
                             this.pageHeading = 'Displaying ' + --this.noOfShops + ' shop(s) nearby';
@@ -128,7 +125,6 @@ export class PreferredShopsComponent implements OnInit, OnDestroy {
     }
 
     public distance(lat1, lon1, lat2, lon2, unit) {
-        console.log(lat1, lon1, lat2, lon2, unit);
         const radlat1 = Math.PI * lat1 / 180;
         const radlat2 = Math.PI * lat2 / 180;
         const radtheta = Math.PI * (lon1 - lon2) / 180;
@@ -138,7 +134,6 @@ export class PreferredShopsComponent implements OnInit, OnDestroy {
         dist = dist * 60 * 1.1515;
         if (unit === 'K') { dist = dist * 1.609344; }
         if (unit === 'N') { dist = dist * 0.8684; }
-        console.log(dist);
         return Math.round(dist * 100) / 100;
     }
 }

@@ -49,44 +49,39 @@
     color: $primary;
   }
 
-  .user-profile {
-    float: right;
-    min-width: 230px;
-    margin-top: 10px;
+  a>img.logoutButton {
+    margin-top: 5px;
+    padding: 5px 5px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    float:right;
+    margin-left: 10px;
+  }
+  
+  a>img.logoutButton:hover {box-shadow: 0 3px #999;}
+  
+  a>img.logoutButton:active {
+    box-shadow: 0 3px #666;
+    transform: translateY(2px);
   }
 
-  .al-user-profile {
-    float: right;
-    margin-right: 12px;
-    transition: all .15s ease-in-out;
-    padding: 0;
-    width: 36px;
-    height: 36px;
-    border: 0;
-    opacity: 1;
-    position: relative;
-    ul.profile-dropdown:after {
-      bottom: 100%;
-      right: 0;
-      border: solid transparent;
-      content: " ";
-      height: 0;
-      width: 0;
-      position: absolute;
-      pointer-events: none;
-      border-color: rgba(255, 255, 255, 0);
-      border-bottom-color: #fff;
-      border-width: 10px;
-      margin-right: 28px;
-    }
-    a {
-      display: block;
-    }
-    img {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-    }
+  .imgButton {
+    margin-top: 5px;
+    padding: 5px 5px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+  }
+  
+  .imgButton:hover {box-shadow: 0 3px #999;}
+  
+  .imgButton:active {
+    box-shadow: 0 3px #666;
+    transform: translateY(2px);
   }
 
   @media screen and (max-width: $resXS) {

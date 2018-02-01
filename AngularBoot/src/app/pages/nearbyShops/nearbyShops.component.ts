@@ -66,7 +66,6 @@ export class NearbyShopsComponent implements OnInit, OnDestroy {
                             const shopsList = data.getShops();
                             if (this.mapLoaded) {
                                 for (const shop of shopsList) {
-                                    console.log(shop.getLocation());
                                     const coords = shop.getLocation().getCoordinates();
                                     shop.setDistance(this.distance(coords[0], coords[1], this.lat, this.lng, 'K'));
                                 }
@@ -97,13 +96,10 @@ export class NearbyShopsComponent implements OnInit, OnDestroy {
         console.log('NearbyShopsComponent::likeShop [ENTER]');
         const userId = this.getUserFromLocalStorage();
         if (userId != null) {
-            console.log('like type: ' + likeType);
             const likeRequest = new ShopLikeRequest(userId, _id, likeType);
-            console.log(JSON.stringify(likeRequest));
             this.shopService.processLike(likeRequest)
                 .subscribe(result => {
                     if (result.getLikeStatus() != null) {
-                        console.log(result.getLikeStatus());
                         if (result.getLikeStatus().getStatus()) {
                             document.getElementById(result.getShopId()).remove();
                             this.pageHeading = 'Displaying ' + --this.noOfShops + ' shop(s) nearby';
@@ -119,16 +115,15 @@ export class NearbyShopsComponent implements OnInit, OnDestroy {
 
     getUserFromLocalStorage(): string {
         console.log('fetching username from localStorage');
-        const currentUser = localStorage.getItem('currentUser');
+        const currentUser: string = localStorage.getItem('currentUser');
         if (currentUser != null || currentUser !== '') {
-            const userArray = JSON.parse(currentUser)[0];
-            return userArray.username;
+            const userArray = JSON.parse(currentUser);
+            return userArray[0].username;
         }
         return null;
     }
 
     public distance(lat1, lon1, lat2, lon2, unit) {
-        console.log(lat1, lon1, lat2, lon2, unit);
         const radlat1 = Math.PI * lat1 / 180;
         const radlat2 = Math.PI * lat2 / 180;
         const radtheta = Math.PI * (lon1 - lon2) / 180;
@@ -138,7 +133,6 @@ export class NearbyShopsComponent implements OnInit, OnDestroy {
         dist = dist * 60 * 1.1515;
         if (unit === 'K') { dist = dist * 1.609344; }
         if (unit === 'N') { dist = dist * 0.8684; }
-        console.log(dist);
         return Math.round(dist * 100) / 100;
     }
 }
