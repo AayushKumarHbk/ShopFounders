@@ -8,6 +8,7 @@ export class DaoShop {
     private email: string;
     private city: string;
     private location: DaoShopLocation;
+    private distance: number;
 
     public constructor() { }
 
@@ -57,5 +58,13 @@ export class DaoShop {
 
     public setLocation(location: DaoShopLocation) {
         this.location = location;
+    }
+
+    public getDistance(): number {
+        return this.distance;
+    }
+
+    public setDistance(distance: number) {
+        this.distance = distance;
     }
 }
