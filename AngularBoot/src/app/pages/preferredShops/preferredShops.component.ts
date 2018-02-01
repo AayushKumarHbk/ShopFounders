@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ShopManagementService } from '../_services/index';
-import { DaoShop, GetAllShopsStatus, ShopLikeRequest, PreferredShopsRequest } from '../_models/index';
+import { DaoShop, GetAllShopsStatus, ShopLikeRequest, PreferredShopsRequest, RemoveLikeRequest } from '../_models/index';
 
 import 'style-loader!./preferredShops.scss';
 
@@ -15,6 +15,7 @@ export class PreferredShopsComponent implements OnInit, OnDestroy {
     lng: number;
     markers: any;
     subscription: any;
+    noOfShops: number;
 
     pageHeading = '';
     private retrievedShops: DaoShop[] = new Array<DaoShop>();
@@ -52,14 +53,15 @@ export class PreferredShopsComponent implements OnInit, OnDestroy {
                 data => {
                     console.log(JSON.stringify(data));
                     if (data.getPreferredShopsStatus() != null) {
-                        const getAllShopsStatus = data.getPreferredShopsStatus();
-                        if (getAllShopsStatus.getStatus()) {
+                        const getPreferredShopsStatus = data.getPreferredShopsStatus();
+                        if (getPreferredShopsStatus.getStatus()) {
                             this.retrievedShops = data.getShops();
+                            this.noOfShops = this.retrievedShops.length;
                             this.pageHeading = 'Displaying ' + this.retrievedShops.length + ' shop(s) nearby';
                             // console.log(this.retrievedShops);
                             /* this.getDistance(); */
                         } else {
-                            this.pageHeading = getAllShopsStatus.getMessage();
+                            this.pageHeading = getPreferredShopsStatus.getMessage();
                         }
                     }
                 }
@@ -69,16 +71,19 @@ export class PreferredShopsComponent implements OnInit, OnDestroy {
         }
     }
 
-    likeShop(_id, likeType) {
+    removeLike(_id) {
         console.log('NearbyShopsComponent::likeShop [ENTER]');
         const userId = this.getUserFromLocalStorage();
         if (userId != null) {
-            console.log('like type: ' + likeType);
-            const likeRequest = new ShopLikeRequest(userId, _id, likeType);
-            this.shopService.processLike(likeRequest)
+            const likeRequest = new RemoveLikeRequest(userId, _id);
+            this.shopService.removeLike(likeRequest)
                 .subscribe(result => {
                     if (result.getLikeStatus() != null) {
                         console.log(result.getLikeStatus());
+                        if (result.getLikeStatus().getStatus()) {
+                            document.getElementById(result.getShopId()).remove();
+                            this.pageHeading = 'Displaying ' + --this.noOfShops + ' shop(s) nearby';
+                        }
                     } else {
                         console.log('request failed');
                     }

@@ -1,0 +1,21 @@
+.imgButton {
+  margin-top: 5px;
+  padding: 5px 5px;
+  font-size: 18px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: #fff;
+  background-color: #292b2c;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 3px #999;
+}
+
+.imgButton:hover {background-color: #3e8e41}
+
+.imgButton:active {
+  background-color: #3e8e41;
+  box-shadow: 0 2px #666;
+  transform: translateY(2px);
+}

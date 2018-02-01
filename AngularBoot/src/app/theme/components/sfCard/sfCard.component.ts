@@ -7,8 +7,6 @@ import { Component, Input } from '@angular/core';
 
 export class SFCard {
   @Input() title: String;
-  @Input() baCardClass: String;
-  @Input() cardType: String;
 
   constructor() {
   }

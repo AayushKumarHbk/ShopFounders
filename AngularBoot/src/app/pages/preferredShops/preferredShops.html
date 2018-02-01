@@ -12,10 +12,10 @@
             </agm-marker>
         </agm-map>
         <div *ngFor="let shop of retrievedShops" class="col-12">
-            <sf-card title="{{shop.name}}, {{shop.city}}" style="float:left;">
+            <sf-card id="{{shop._id}}" title="{{shop.name}}, {{shop.city}}" style="float:left;">
                 <img src="{{shop.picture}}" width="200" height="200" />
                 <div class="form-group">
-                    <img src="../../../assets/icons/icons8-unlike.png" (click)="likeShop(shop._id, 0)"/>
+                    <img class="imgButton" src="../../../assets/icons/icons8-delete.png" (click)="removeLike(shop._id)"/>
                 </div>
             </sf-card>
         </div>

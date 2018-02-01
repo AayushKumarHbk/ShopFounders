@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ShopManagementService } from '../_services/index';
-import { DaoShop, GetAllShopsStatus, ShopLikeRequest } from '../_models/index';
+import { DaoShop, GetAllShopsStatus, ShopLikeRequest, PreferredShopsRequest } from '../_models/index';
 
 import 'style-loader!./nearbyShops.scss';
 
@@ -44,21 +44,28 @@ export class NearbyShopsComponent implements OnInit, OnDestroy {
     getAllShops() {
         console.log('Calling ShopManagementService...');
         this.pageHeading = 'Fetching shops, Please wait...';
-        this.shopService.getAllShops().subscribe(
-            data => {
-                if (data.getGetAllShopsStatus() != null) {
-                    const getAllShopsStatus = data.getGetAllShopsStatus();
-                    if (getAllShopsStatus.getStatus()) {
-                        this.retrievedShops = data.getShops();
-                        this.pageHeading = 'Displaying ' + this.retrievedShops.length + ' shops nearby';
-                        // console.log(this.retrievedShops);
-                        /* this.getDistance(); */
-                    } else {
-                        this.pageHeading = getAllShopsStatus.getMessage();
+        const userId = this.getUserFromLocalStorage();
+        if (userId != null) {
+            const request = new PreferredShopsRequest();
+            request.setUsername(userId);
+            this.shopService.getNearbyShops(request).subscribe(
+                data => {
+                    if (data.getPreferredShopsStatus() != null) {
+                        const getNearbyShopsStatus = data.getPreferredShopsStatus();
+                        if (getNearbyShopsStatus.getStatus()) {
+                            this.retrievedShops = data.getShops();
+                            this.pageHeading = 'Displaying ' + this.retrievedShops.length + ' shops nearby';
+                            // console.log(this.retrievedShops);
+                            /* this.getDistance(); */
+                        } else {
+                            this.pageHeading = getNearbyShopsStatus.getMessage();
+                        }
                     }
                 }
-            }
-        );
+            );
+        } else {
+            console.log('could not find user... terminating request');
+        }
     }
 
     likeShop(_id, likeType) {

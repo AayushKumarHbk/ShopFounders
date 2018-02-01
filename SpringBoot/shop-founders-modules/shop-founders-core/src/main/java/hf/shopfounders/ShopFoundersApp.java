@@ -1,6 +1,5 @@
 package hf.shopfounders;
 
-import hf.shopfounders.dao.DaoShopLikes;
 import hf.shopfounders.dao.DaoUser;
 import hf.shopfounders.repository.ShopLikesRepository;
 import hf.shopfounders.repository.UserRepository;
@@ -93,5 +92,6 @@ public class ShopFoundersApp implements CommandLineRunner {
         userRepository.save(dummyUserList);
         likesRepository.findAll().stream().forEach(p -> logger.info(p.toString()));
         //likesRepository.deleteAll();
+        logger.info("ShopFoundersApp::run [EXIT]");
     }
 }

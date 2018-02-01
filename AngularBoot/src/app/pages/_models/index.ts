@@ -13,3 +13,8 @@ export * from './shop/processLikes/shopLikeRequest';
 export * from './shop/processLikes/shopLikeResponse';
 export * from './shop/processLikes/shopLikeStatus';
 export * from './shop/preferredShops/preferredShopsRequest';
+export * from './shop/preferredShops/preferredShopsResponse';
+export * from './shop/preferredShops/preferredShopsStatus';
+export * from './shop/removeLike/removeLikeRequest';
+export * from './shop/removeLike/removeLikeResponse';
+export * from './shop/removeLike/removeLikeStatus';

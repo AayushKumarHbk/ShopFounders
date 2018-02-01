@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Document(collection = "LikeTable_Shop")
@@ -17,6 +18,9 @@ import java.util.Date;
 })
 public class DaoShopLikes {
 
+    @JsonIgnore
+    @Id
+    private String id;
     @JsonProperty("userId")
     private String userId;
     @JsonProperty("shopId")
@@ -24,16 +28,20 @@ public class DaoShopLikes {
     @JsonProperty("likeType")
     private int likeType;
     @JsonIgnore
-    private Date likeDate;
+    private LocalDateTime likeDate;
 
     public DaoShopLikes() {
     }
 
-    public DaoShopLikes(String userId, String shopId, int likeType, Date likeDate) {
+    public DaoShopLikes(String userId, String shopId, int likeType, LocalDateTime likeDate) {
         this.userId = userId;
         this.shopId = shopId;
         this.likeType = likeType;
         this.likeDate = likeDate;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getUserId() {
@@ -60,11 +68,11 @@ public class DaoShopLikes {
         this.likeType = likeType;
     }
 
-    public Date getLikeDate() {
+    public LocalDateTime getLikeDate() {
         return likeDate;
     }
 
-    public void setLikeDate(Date likeDate) {
+    public void setLikeDate(LocalDateTime likeDate) {
         this.likeDate = likeDate;
     }
 
