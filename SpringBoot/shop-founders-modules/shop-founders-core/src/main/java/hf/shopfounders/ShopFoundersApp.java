@@ -83,14 +83,14 @@ public class ShopFoundersApp implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         logger.info("ShopFoundersApp::run [ENTER]");
-        List<DaoUser> dummyUserList = Arrays.asList(
+        /*List<DaoUser> dummyUserList = Arrays.asList(
                 new DaoUser("admin", "admin", "admin"),
                 new DaoUser("user", "shopfounders", "admin"));
         logger.info("ShopFoundersApp::run cleaning UserRepository");
         userRepository.deleteAll();
         logger.info("ShopFoundersApp::run inserting dummy List<DaoUsers>");
-        userRepository.save(dummyUserList);
-        likesRepository.findAll().stream().forEach(p -> logger.info(p.toString()));
+        userRepository.save(dummyUserList);*/
+        //likesRepository.findAll().stream().forEach(p -> logger.info(p.toString()));
         //likesRepository.deleteAll();
         logger.info("ShopFoundersApp::run [EXIT]");
     }
