@@ -15,4 +15,5 @@ public interface ShopLikesRepository extends MongoRepository<DaoShopLikes, Strin
 
     public List<DaoShopLikes> findDaoShopLikesByUserId(String username);
     public DaoShopLikes findByUserIdAndAndShopId(String userId, String shopId);
+    public List<DaoShopLikes> findByUserIdAndAndLikeType(String userId, int likeType);
 }

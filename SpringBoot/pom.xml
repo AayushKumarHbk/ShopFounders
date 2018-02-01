@@ -26,7 +26,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 
-		<start.class>hiddenfounders.ShopFoundersApp</start.class>
+		<start.class>hf.shopfounders.ShopFoundersApp</start.class>
 	</properties>
 
 	<dependencies>

@@ -25,6 +25,6 @@ public class DaoShopLocation {
     public String toString() {
         return String.format(
                 "Location[coordinates='%s', coordinates='%s']",
-                coordinates, coordinates);
+                coordinates[0], coordinates[1]);
     }
 }

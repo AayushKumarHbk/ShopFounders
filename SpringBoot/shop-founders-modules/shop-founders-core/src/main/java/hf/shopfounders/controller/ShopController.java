@@ -100,7 +100,7 @@ public class ShopController {
                 MongoOperations mongoOperations = new MongoTemplate(new SimpleMongoDbFactory(new MongoClient(), "shops"));
                 mongoOperations.updateFirst(query(where("userId").is(daoShopLikes.getUserId()))
                                 .addCriteria(where("shopId").is(daoShopLikes.getShopId())),
-                        update("likeType", daoShopLikes.getLikeType()).set("likeDate", new Date()),
+                        update("likeType", daoShopLikes.getLikeType()).set("likeDate", LocalDateTime.now()),
                         DaoShopLikes.class);
             } else {
                 likesRepository.save(daoShopLikes);
@@ -115,7 +115,7 @@ public class ShopController {
                     new ShopLikeStatus(false, errorMessage));
             return new ResponseEntity<ShopLikeResponse>(likeResponse, new HttpHeaders(), HttpStatus.OK);
         }
-        logger.info(daoShopLikes.getLikeType() + " added successfully");
+        logger.info(daoShopLikes.getLikeType() + " added successfully: "+daoShopLikes.getLikeDate());
         ShopLikeResponse likeResponse = new ShopLikeResponse(
                 daoShopLikes.getUserId(),
                 daoShopLikes.getShopId(),
@@ -181,18 +181,17 @@ public class ShopController {
     }
 
     public void cleanRepositoryForDislikes(String username) {
-        MongoOperations mongoOperations = new MongoTemplate(new SimpleMongoDbFactory(new MongoClient(), "shops"));
-        List<DaoShopLikes> retrievedList = mongoOperations.find(query(where("userId").is(username))
-                .addCriteria(where("likeType").is(0)), DaoShopLikes.class);
+        List<DaoShopLikes> retrievedList = likesRepository.findByUserIdAndAndLikeType(username, 0);
         retrievedList.removeIf(x->isDateMoreThanTwoHours(x.getLikeDate()));
-        retrievedList.forEach(x->mongoOperations.remove(x));
     }
 
     public boolean isDateMoreThanTwoHours(LocalDateTime date) {
         ArgAssert.assertNotEmpty(date.toString(), "like date");
-        long diff = Math.abs(Duration.between(LocalDateTime.now(), date).toHours());
-        logger.info("difference of time: "+diff);
-        return  diff > 2;
+        logger.info(date.toString());
+        logger.info(LocalDateTime.now().toString());
+        long diff = Math.abs(Duration.between(LocalDateTime.now(), date).toMinutes());
+        logger.info("difference of time: "+diff + " min");
+        return  diff > 120;
     }
 
     /**
@@ -223,7 +222,6 @@ public class ShopController {
                 );
             ArgAssert.assertNotEmpty(shopList, "likes list");
             logger.info(shopList.size()+" shop(s) filtered in");
-            //shopList.stream().forEach(p -> logger.info(p.toString()));
         }catch(NullPointerException e) {
             logger.info("error while processing list(s)");
             final PreferredShopsResponse response = new PreferredShopsResponse(
