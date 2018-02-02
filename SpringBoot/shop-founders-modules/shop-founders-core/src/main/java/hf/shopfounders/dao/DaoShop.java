@@ -23,6 +23,18 @@ public class DaoShop {
     @JsonProperty("location")
     private DaoShopLocation location;
 
+    public DaoShop() {
+    }
+
+    public DaoShop(String _id, String picture, String name, String email, String city, DaoShopLocation location) {
+        this._id = _id;
+        this.picture = picture;
+        this.name = name;
+        this.email = email;
+        this.city = city;
+        this.location = location;
+    }
+
     public String get_id() {
         return this._id;
     }

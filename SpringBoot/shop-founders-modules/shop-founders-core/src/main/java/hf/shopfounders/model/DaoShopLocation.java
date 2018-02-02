@@ -5,6 +5,14 @@ public class DaoShopLocation {
     private String type;
     private double[] coordinates;
 
+    public DaoShopLocation() {
+    }
+
+    public DaoShopLocation(String type, double[] coordinates) {
+        this.type = type;
+        this.coordinates = coordinates;
+    }
+
     public String getType() {
         return type;
     }
