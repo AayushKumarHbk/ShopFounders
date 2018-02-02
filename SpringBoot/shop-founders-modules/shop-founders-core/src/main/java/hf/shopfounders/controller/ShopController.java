@@ -199,8 +199,8 @@ public class ShopController {
      *
      * @param request username
      *
-     * @return ResponseEntity<NearbyShopsResponse>
-     *     {@link NearbyShopsResponse} as a response to {@link PreferredShopsRequest}
+     * @return ResponseEntity<PreferredShopsResponse>
+     *     {@link PreferredShopsResponse} as a response to {@link PreferredShopsRequest}
      */
     @PostMapping(value = "/nearbyShops", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PreferredShopsResponse> nearbyShops(@RequestBody PreferredShopsRequest request) {

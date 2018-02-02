@@ -17,6 +17,15 @@ public class RegisterRequest {
     @JsonProperty(value = "role")
     private String role;
 
+    public RegisterRequest() {
+    }
+
+    public RegisterRequest(String username, String password, String role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
     public String getUsername() {
         return username;
     }

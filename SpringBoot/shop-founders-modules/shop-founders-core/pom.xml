@@ -5,16 +5,20 @@
     <parent>
         <artifactId>shop-founders-modules</artifactId>
         <groupId>com.hf</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>shop-founders-core</artifactId>
 
+    <properties>
+        <lang3.version>3.0</lang3.version>
+    </properties>
+
     <dependencies><dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.0</version>
+        <version>${lang3.version}</version>
     </dependency>
     </dependencies>
 
