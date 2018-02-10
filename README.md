@@ -3,6 +3,13 @@ ShopFounders
 
 An Angular 4 application integrated with Spring Boot and MongoDB
 
+List of  technologies used:
+
+	Frameworks: Angular 4, Spring Boot
+	Build Automation Tool: Maven
+	APIs: Jackson, Google Maps JavaScript API
+	Unit Testing: JUnit 4.12
+
 Usage
 -----
 
